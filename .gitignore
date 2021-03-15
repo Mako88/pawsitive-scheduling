@@ -1,0 +1,5 @@
+dotnet/PawsitiveScheduling/.vs/
+dotnet/PawsitiveScheduling/bin/
+dotnet/PawsitiveScheduling/obj/
+dotnet/.vs/
+*.env
