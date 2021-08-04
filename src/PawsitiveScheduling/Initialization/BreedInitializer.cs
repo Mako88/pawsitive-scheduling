@@ -2,7 +2,7 @@
 using PawsitivityScheduler.Data.Breeds;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Data.Breeds
+namespace PawsitiveScheduling.Initialization
 {
     /// <summary>
     /// Class to add default breed information to the database

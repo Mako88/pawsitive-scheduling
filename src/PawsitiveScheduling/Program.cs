@@ -2,10 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PawsitiveScheduling.Data.Breeds;
+using PawsitiveScheduling.Initialization;
 using PawsitiveScheduling.Utility;
-using PawsitivityScheduler.Data.Breeds;
-using System;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling
@@ -23,22 +21,8 @@ namespace PawsitiveScheduling
             {
                 var services = serviceScope.ServiceProvider;
 
-                try
-                {
-                    var dbUtility = services.GetRequiredService<IDatabaseUtility>();
-
-                    // Add default breed information if it hasn't already been added
-                    var testBreed = dbUtility.GetBreed(BreedNames.Affenpinscher);
-                    if (testBreed == null)
-                    {
-                        await new BreedInitializer(dbUtility).Initialize().ConfigureAwait(false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB");
-                }
+                await new Initializer(services.GetRequiredService<IDatabaseUtility>(),
+                    services.GetRequiredService<ILogger<Initializer>>()).Initialize().ConfigureAwait(false);
             }
 
             await webHost.RunAsync().ConfigureAwait(false);
