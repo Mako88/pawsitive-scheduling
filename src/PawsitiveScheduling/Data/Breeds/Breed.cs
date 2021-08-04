@@ -2,6 +2,12 @@
 {
     public class Breed
     {
+        public BreedNames Id
+        {
+            get => Name;
+            set => Name = value;
+        }
+
         public BreedNames Name { get; set; }
 
         public int GroomMinutes { get; set; }

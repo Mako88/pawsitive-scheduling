@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using PawsitivityScheduler.Data;
+using PawsitiveScheduling.Utility;
 
 namespace PawsitiveScheduling
 {
@@ -28,14 +27,13 @@ namespace PawsitiveScheduling
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
-            services.AddDbContext<SchedulingContext>(options =>
-            {
-                options.UseMySQL(EnvironmentVariables.GetDBConnectionString());
-            });
+            services.AddLogging();
+
+            services.AddSingleton<IDatabaseUtility, DatabaseUtility>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SchedulingContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -7,13 +7,10 @@
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="3.1.10" />
+    <PackageReference Include="MongoDB.Driver" Version="2.13.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SimpleInjector" Version="5.3.2" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.0" />
   </ItemGroup>
 

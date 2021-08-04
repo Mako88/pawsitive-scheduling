@@ -1,32 +1,43 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PawsitiveScheduling.Data.Breeds;
-using PawsitivityScheduler.Data;
+using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data.Breeds;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling
 {
     public class Program
     {
+        /// <summary>
+        /// Application entry point
+        /// </summary>
         public static async Task Main(string[] args)
         {
             var webHost = CreateHostBuilder(args).Build();
 
-            using (var scope = webHost.Services.CreateScope())
+            using (var serviceScope = webHost.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<SchedulingContext>();
+                var services = serviceScope.ServiceProvider;
 
-                await context.Database.MigrateAsync().ConfigureAwait(false);
-
-                // Add default breed information if it hasn't already been added
-                var testBreed = context.Breeds.FirstOrDefault(x => x.Name == BreedNames.Affenpinscher);
-                if (testBreed == null)
+                try
                 {
-                    await BreedInitializer.Initialize(context).ConfigureAwait(false);
+                    var dbUtility = services.GetRequiredService<IDatabaseUtility>();
+
+                    // Add default breed information if it hasn't already been added
+                    var testBreed = dbUtility.GetBreed(BreedNames.Affenpinscher);
+                    if (testBreed == null)
+                    {
+                        await new BreedInitializer(dbUtility).Initialize().ConfigureAwait(false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred seeding the DB");
                 }
             }
 

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API
@@ -14,14 +12,14 @@ namespace PawsitiveScheduling.API
     [ApiController]
     public class DogsHandler : ControllerBase
     {
-        private readonly SchedulingContext context;
+        private readonly IDatabaseUtility dbUtility;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public DogsHandler(SchedulingContext context)
+        public DogsHandler(IDatabaseUtility dbUtility)
         {
-            this.context = context;
+            this.dbUtility = dbUtility;
         }
 
         /// <summary>
@@ -29,22 +27,19 @@ namespace PawsitiveScheduling.API
         /// </summary>
         [HttpPost]
         [Route("add")]
-        public async Task<Guid> AddDog(Dog dog)
+        public async Task<string> AddDog(Dog dog)
         {
-            dog.Breed = context.Breeds.FirstOrDefault(x => x.Name == dog.Breed.Name);
-            context.Dogs.Add(dog);
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            var savedDog = await dbUtility.AddDog(dog).ConfigureAwait(false);
 
-            return dog.ID;
+            return savedDog.Id;
         }
 
+        /// <summary>
+        /// Get a dog by ID
+        /// </summary>
         [HttpGet]
-        [Route("get")]
-        public async Task<Dog> GetDog()
-        {
-            var test = context.Dogs.Include(x => x.Breed).FirstOrDefault();
-
-            return test;
-        }
+        [Route("{id}")]
+        public async Task<Dog> GetDog(string id) =>
+            await dbUtility.GetDog(id).ConfigureAwait(false);
     }
 }

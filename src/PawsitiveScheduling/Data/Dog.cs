@@ -1,4 +1,7 @@
-﻿using PawsitivityScheduler.Data.Breeds;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using PawsitivityScheduler.Data.Breeds;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,11 +9,13 @@ namespace PawsitivityScheduler.Data
 {
     public class Dog
     {
-        public Guid ID { get; set; }
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public Breed Breed { get; set; }
+        public BreedNames Breed { get; set; }
 
         public int AdditionalGroomMinutes { get; set; }
 
