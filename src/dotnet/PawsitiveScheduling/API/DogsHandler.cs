@@ -27,7 +27,7 @@ namespace PawsitiveScheduling.API
         /// </summary>
         [HttpPost]
         [Route("add")]
-        public async Task<string> AddDog(Dog dog)
+        public async Task<string> AddDog([FromBody] Dog dog)
         {
             var savedDog = await dbUtility.AddDog(dog).ConfigureAwait(false);
 
@@ -39,7 +39,7 @@ namespace PawsitiveScheduling.API
         /// </summary>
         [HttpGet]
         [Route("{id}")]
-        public async Task<Dog> GetDog(string id) =>
+        public async Task<Dog> GetDog([FromRoute] string id) =>
             await dbUtility.GetDog(id).ConfigureAwait(false);
     }
 }

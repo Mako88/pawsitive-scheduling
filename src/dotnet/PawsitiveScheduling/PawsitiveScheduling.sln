@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PawsitiveScheduling", "PawsitiveScheduling\PawsitiveScheduling.csproj", "{49DE59A5-8DF2-4F23-B9F3-54FA9B4F4348}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PawsitiveScheduling", "PawsitiveScheduling.csproj", "{345917CA-4741-4046-BA16-878CD8E30DF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{49DE59A5-8DF2-4F23-B9F3-54FA9B4F4348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49DE59A5-8DF2-4F23-B9F3-54FA9B4F4348}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49DE59A5-8DF2-4F23-B9F3-54FA9B4F4348}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49DE59A5-8DF2-4F23-B9F3-54FA9B4F4348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{345917CA-4741-4046-BA16-878CD8E30DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{345917CA-4741-4046-BA16-878CD8E30DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{345917CA-4741-4046-BA16-878CD8E30DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{345917CA-4741-4046-BA16-878CD8E30DF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {39668844-C733-4B6C-BF5D-5E0657ED4383}
+		SolutionGuid = {AA9E3038-6480-4A41-8E76-99BE1374BE6A}
 	EndGlobalSection
 EndGlobal

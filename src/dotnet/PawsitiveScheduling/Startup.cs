@@ -1,23 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using PawsitiveScheduling.Initialization;
 using PawsitiveScheduling.Utility;
 
 namespace PawsitiveScheduling
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             DotNetEnv.Env.TraversePath().Load();
@@ -27,9 +22,18 @@ namespace PawsitiveScheduling
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Pawsitivity API", Version = "v1" });
+            });
+
+            services.AddSwaggerGenNewtonsoftSupport();
+
             services.AddLogging();
 
             services.AddSingleton<IDatabaseUtility, DatabaseUtility>();
+
+            services.AddHostedService<Initializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,11 +48,16 @@ namespace PawsitiveScheduling
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("v1/swagger.json", "Pawsitivity API V1");
             });
         }
     }
