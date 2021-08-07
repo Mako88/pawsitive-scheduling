@@ -1,5 +1,8 @@
-﻿using PawsitiveScheduling.Utility;
+﻿using MongoDB.Driver;
+using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data.Breeds;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Initialization
@@ -24,9 +27,14 @@ namespace PawsitiveScheduling.Initialization
         /// </summary>
         public async Task Initialize()
         {
-            await dbUtility.AddBreed(
-                new Breed { Name = BreedNames.Affenpinscher, Group = Groups.ToyBreeds, Size = Sizes.Medium, BathMinutes = 15, GroomMinutes = 15 }
-            ).ConfigureAwait(false);
+            // Add default breed information if it hasn't already been added
+            var existingBreeds = await dbUtility.GetEntities<Breed>(Builders<Breed>.Filter.Empty).ConfigureAwait(false);
+            if (existingBreeds.Count() != Enum.GetNames(typeof(BreedName)).Length)
+            {
+                await dbUtility.AddEntity(
+                    new Breed { Name = BreedName.Affenpinscher, Group = Group.ToyBreeds, Size = Size.Medium, BathMinutes = 15, GroomMinutes = 15 }
+                ).ConfigureAwait(false);
+            }
         }
     }
 }

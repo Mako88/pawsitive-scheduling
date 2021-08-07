@@ -1,21 +1,25 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.IdGenerators;
+﻿using PawsitiveScheduling;
+using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Extensions;
 using PawsitivityScheduler.Data.Breeds;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PawsitivityScheduler.Data
 {
-    public class Dog
+    public class Dog : Entity
     {
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public Dog()
+        {
+            CollectionName = Constants.DogCollectionName;
+        }
 
         public string Name { get; set; }
 
-        public BreedNames Breed { get; set; }
+        public BreedName Breed { get; set; }
+
+        [NotMapped]
+        public string BreedDisplayName => Breed.GetDescription();
 
         public int AdditionalGroomMinutes { get; set; }
 

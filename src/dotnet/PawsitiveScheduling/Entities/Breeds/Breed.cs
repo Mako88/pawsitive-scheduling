@@ -1,21 +1,23 @@
-﻿namespace PawsitivityScheduler.Data.Breeds
+﻿using PawsitiveScheduling;
+using PawsitiveScheduling.Entities;
+
+namespace PawsitivityScheduler.Data.Breeds
 {
-    public class Breed
+    public class Breed : Entity
     {
-        public BreedNames Id
+        public Breed()
         {
-            get => Name;
-            set => Name = value;
+            CollectionName = Constants.BreedCollectionName;
         }
 
-        public BreedNames Name { get; set; }
+        public BreedName Name { get; set; }
 
         public int GroomMinutes { get; set; }
 
         public int BathMinutes { get; set; }
 
-        public Sizes Size { get; set; }
+        public Size Size { get; set; }
 
-        public Groups Group { get; set; }
+        public Group Group { get; set; }
     }
 }

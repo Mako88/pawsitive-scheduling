@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data;
 using System.Threading.Tasks;
@@ -29,9 +30,9 @@ namespace PawsitiveScheduling.API
         [Route("add")]
         public async Task<string> AddDog([FromBody] Dog dog)
         {
-            var savedDog = await dbUtility.AddDog(dog).ConfigureAwait(false);
+            var savedDog = await dbUtility.AddEntity(dog).ConfigureAwait(false);
 
-            return savedDog.Id;
+            return savedDog.Id.ToString();
         }
 
         /// <summary>
@@ -40,6 +41,6 @@ namespace PawsitiveScheduling.API
         [HttpGet]
         [Route("{id}")]
         public async Task<Dog> GetDog([FromRoute] string id) =>
-            await dbUtility.GetDog(id).ConfigureAwait(false);
+            await dbUtility.GetEntity<Dog>(ObjectId.Parse(id)).ConfigureAwait(false);
     }
 }

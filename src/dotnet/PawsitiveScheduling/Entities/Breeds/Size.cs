@@ -2,7 +2,7 @@
 
 namespace PawsitivityScheduler.Data.Breeds
 {
-    public enum Sizes
+    public enum Size
     {
         [Description("Extra Small")]
         ExtraSmall,

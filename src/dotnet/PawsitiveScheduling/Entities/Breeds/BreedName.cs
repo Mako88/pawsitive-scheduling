@@ -2,7 +2,7 @@
 
 namespace PawsitivityScheduler.Data.Breeds
 {
-    public enum BreedNames
+    public enum BreedName
     {
         [Description("Affenpinscher")]
         Affenpinscher,

@@ -2,7 +2,7 @@
 
 namespace PawsitivityScheduler.Data.Breeds
 {
-    public enum Groups
+    public enum Group
     {
         [Description("Herding")]
         Herding,

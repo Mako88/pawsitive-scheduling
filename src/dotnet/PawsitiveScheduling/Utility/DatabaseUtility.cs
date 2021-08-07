@@ -1,6 +1,9 @@
-﻿using MongoDB.Driver;
-using PawsitivityScheduler.Data;
-using PawsitivityScheduler.Data.Breeds;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using PawsitiveScheduling.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Utility
@@ -10,11 +13,12 @@ namespace PawsitiveScheduling.Utility
     /// </summary>
     public class DatabaseUtility : IDatabaseUtility
     {
-        private const string DatabaseName = "pawsitivity";
-        private const string BreedCollectionName = "breeds";
-        private const string DogCollectionName = "dogs";
-
         private readonly IMongoDatabase database;
+
+        /// <summary>
+        /// Direct access to the database
+        /// </summary>
+        public IMongoDatabase Database { get => database; }
 
         /// <summary>
         /// Constructor
@@ -22,51 +26,73 @@ namespace PawsitiveScheduling.Utility
         public DatabaseUtility()
         {
             var client = new MongoClient(EnvironmentVariables.GetDBConnectionString());
-            database = client.GetDatabase(DatabaseName);
+            database = client.GetDatabase(Constants.DatabaseName);
         }
 
         /// <summary>
-        /// Get a breed by name
+        /// Get an entity by ID
         /// </summary>
-        public async Task<Breed> GetBreed(BreedNames name)
-        {
-            var collection = database.GetCollection<Breed>(BreedCollectionName);
+        public async Task<T> GetEntity<T>(ObjectId id) where T : Entity, new() =>
+            await GetCollection<T>().Find(x => x.Id == id).FirstOrDefaultAsync().ConfigureAwait(false);
 
-            return await collection.Find(x => x.Id == name).FirstOrDefaultAsync().ConfigureAwait(false);
+        /// <summary>
+        /// Get entities using a filter expression
+        /// </summary>
+        public async Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity, new() =>
+            await GetCollection<T>().Find(filter).ToListAsync();
+
+        /// <summary>
+        /// Get entities using a filter definition
+        /// </summary>
+        public async Task<IEnumerable<T>> GetEntities<T>(FilterDefinition<T> filter) where T : Entity, new() =>
+            await GetCollection<T>().Find(filter).ToListAsync();
+
+        /// <summary>
+        /// Add an entity
+        /// </summary>
+        public async Task<T> AddEntity<T>(T entity) where T : Entity, new()
+        {
+            var collection = GetCollection<T>();
+
+            await collection.InsertOneAsync(entity).ConfigureAwait(false);
+
+            return entity;
         }
 
         /// <summary>
-        /// Add a breed to the database
+        /// Add an entity
         /// </summary>
-        public async Task<Breed> AddBreed(Breed breed)
+        public async Task<T> UpdateEntity<T>(T entity) where T : Entity, new()
         {
-            var collection = database.GetCollection<Breed>(BreedCollectionName);
+            var collection = GetCollection<T>();
 
-            await collection.InsertOneAsync(breed).ConfigureAwait(false);
+            await collection.InsertOneAsync(entity).ConfigureAwait(false);
 
-            return breed;
+            return entity;
         }
 
         /// <summary>
-        /// Get a dog by id
+        /// Delete an entity
         /// </summary>
-        public async Task<Dog> GetDog(string id)
-        {
-            var collection = database.GetCollection<Dog>(DogCollectionName);
+        public async Task<DeleteResult> DeleteEntity<T>(ObjectId id) where T : Entity, new() =>
+            await GetCollection<T>().DeleteOneAsync(x => x.Id == id).ConfigureAwait(false);
 
-            return await collection.Find(x => x.Id == id).FirstOrDefaultAsync().ConfigureAwait(false);
+        /// <summary>
+        /// Delete an entity, returning it
+        /// </summary>
+        public async Task<T> DeleteAndReturnEntity<T>(ObjectId id) where T : Entity, new()
+        {
+            var entity = await GetEntity<T>(id).ConfigureAwait(false);
+
+            await DeleteEntity<T>(id).ConfigureAwait(false);
+
+            return entity;
         }
 
         /// <summary>
-        /// Add a dog to the database
+        /// Get the collection for the given type
         /// </summary>
-        public async Task<Dog> AddDog(Dog dog)
-        {
-            var collection = database.GetCollection<Dog>(DogCollectionName);
-
-            await collection.InsertOneAsync(dog).ConfigureAwait(false);
-
-            return dog;
-        }
+        private IMongoCollection<T> GetCollection<T>() where T : Entity, new() =>
+            Database.GetCollection<T>(new T().CollectionName);
     }
 }

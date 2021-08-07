@@ -1,5 +1,9 @@
-﻿using PawsitivityScheduler.Data;
-using PawsitivityScheduler.Data.Breeds;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using PawsitiveScheduling.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Utility
@@ -10,23 +14,43 @@ namespace PawsitiveScheduling.Utility
     public interface IDatabaseUtility
     {
         /// <summary>
-        /// Get a breed by name
+        /// Direct access to the database
         /// </summary>
-        public Task<Breed> GetBreed(BreedNames name);
+        public IMongoDatabase Database { get; }
 
         /// <summary>
-        /// Add a breed to the database
+        /// Get an entity by ID
         /// </summary>
-        public Task<Breed> AddBreed(Breed breed);
+        public Task<T> GetEntity<T>(ObjectId id) where T : Entity, new();
 
         /// <summary>
-        /// Get a dog by id
+        /// Get entities using a filter expression
         /// </summary>
-        public Task<Dog> GetDog(string id);
+        public Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity, new();
 
         /// <summary>
-        /// Add a dog to the database
+        /// Get entities using a filter definition
         /// </summary>
-        public Task<Dog> AddDog(Dog dog);
+        public Task<IEnumerable<T>> GetEntities<T>(FilterDefinition<T> filter) where T : Entity, new();
+
+        /// <summary>
+        /// Add an entity
+        /// </summary>
+        public Task<T> AddEntity<T>(T entity) where T : Entity, new();
+
+        /// <summary>
+        /// Add an entity
+        /// </summary>
+        public Task<T> UpdateEntity<T>(T entity) where T : Entity, new();
+
+        /// <summary>
+        /// Delete an entity
+        /// </summary>
+        public Task<DeleteResult> DeleteEntity<T>(ObjectId id) where T : Entity, new();
+
+        /// <summary>
+        /// Delete an entity, returning it
+        /// </summary>
+        public Task<T> DeleteAndReturnEntity<T>(ObjectId id) where T : Entity, new();
     }
 }

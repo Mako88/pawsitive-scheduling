@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PawsitiveScheduling.Utility;
-using PawsitivityScheduler.Data.Breeds;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,12 +35,9 @@ namespace PawsitiveScheduling.Initialization
 
                 try
                 {
-                    // Add default breed information if it hasn't already been added
-                    var testBreed = await dbUtility.GetBreed(BreedNames.Affenpinscher);
-                    if (testBreed == null)
-                    {
-                        await new BreedInitializer(dbUtility).Initialize().ConfigureAwait(false);
-                    }
+                    await new IndexInitializer(dbUtility).Initialize().ConfigureAwait(false);
+
+                    await new BreedInitializer(dbUtility).Initialize().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
