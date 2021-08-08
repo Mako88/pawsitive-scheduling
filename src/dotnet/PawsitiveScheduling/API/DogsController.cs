@@ -4,21 +4,21 @@ using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.API
+namespace PawsitiveScheduling.API.Auth
 {
     /// <summary>
     /// Handler for api/dogs/* endpoints
     /// </summary>
     [Route("api/dogs")]
     [ApiController]
-    public class DogsHandler : ControllerBase
+    public class DogsController : ControllerBase
     {
         private readonly IDatabaseUtility dbUtility;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public DogsHandler(IDatabaseUtility dbUtility)
+        public DogsController(IDatabaseUtility dbUtility)
         {
             this.dbUtility = dbUtility;
         }

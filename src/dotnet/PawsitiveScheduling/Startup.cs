@@ -31,7 +31,17 @@ namespace PawsitiveScheduling
 
             services.AddLogging();
 
+            RegisterServices(services);
+        }
+
+        /// <summary>
+        /// Register custom services
+        /// </summary>
+        private void RegisterServices(IServiceCollection services)
+        {
             services.AddSingleton<IDatabaseUtility, DatabaseUtility>();
+
+            services.AddScoped<IPasswordUtility, PasswordUtility>();
 
             services.AddHostedService<Initializer>();
         }

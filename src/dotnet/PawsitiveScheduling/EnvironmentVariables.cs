@@ -7,7 +7,13 @@ namespace PawsitiveScheduling
     /// </summary>
     public static class EnvironmentVariables
     {
-        public static bool IsLocal = GetEnvironmentVariable("IsLocal", true);
+        public static bool IsLocal = GetEnvironmentVariable("IS_LOCAL", true);
+
+        public static int Argon2DegreeOfParallelism = GetEnvironmentVariable("ARGON2_DEGREE_OF_PARALLELISM", 8);
+
+        public static int Argon2Iterations = GetEnvironmentVariable("ARGON2_ITERATIONS", 4);
+
+        public static int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024*1024);
 
         /// <summary>
         /// Get the connection string for the database
@@ -36,6 +42,21 @@ namespace PawsitiveScheduling
             try
             {
                 return bool.Parse(Environment.GetEnvironmentVariable(variableName));
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get an environment variable as an int
+        /// </summary>
+        public static int GetEnvironmentVariable(string variableName, int defaultValue)
+        {
+            try
+            {
+                return int.Parse(Environment.GetEnvironmentVariable(variableName));
             }
             catch (Exception)
             {
