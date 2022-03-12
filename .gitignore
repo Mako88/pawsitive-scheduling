@@ -1,4 +1,13 @@
+.vs/
 *.env
-src/dotnet/PawsitiveScheduling/bin/
-src/dotnet/PawsitiveScheduling/obj/
-src/dotnet/PawsitiveScheduling/.vs/
+obj/
+bin/
+.DS_Store
+node_modules
+/svelte/build
+.svelte-kit
+/svelte/package
+.env
+.env.*
+.vercel
+.output
