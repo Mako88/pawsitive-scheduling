@@ -28,7 +28,7 @@ namespace PawsitiveScheduling.Initialization
         public async Task Initialize()
         {
             // Add default breed information if it hasn't already been added
-            var existingBreeds = await dbUtility.GetEntities<Breed>(Builders<Breed>.Filter.Empty).ConfigureAwait(false);
+            var existingBreeds = await dbUtility.GetEntities(Builders<Breed>.Filter.Empty).ConfigureAwait(false);
             if (existingBreeds.Count() != Enum.GetNames(typeof(BreedName)).Length)
             {
                 await dbUtility.AddEntity(

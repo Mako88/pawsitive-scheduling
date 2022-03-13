@@ -9,7 +9,7 @@ namespace PawsitiveScheduling.API.Auth
     /// <summary>
     /// Handler for api/dogs/* endpoints
     /// </summary>
-    [Route("api/dogs")]
+    [Route("dogs")]
     [ApiController]
     public class DogsController : ControllerBase
     {

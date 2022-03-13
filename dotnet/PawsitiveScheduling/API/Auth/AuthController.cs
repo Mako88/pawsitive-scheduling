@@ -2,9 +2,6 @@
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth
@@ -12,7 +9,7 @@ namespace PawsitiveScheduling.API.Auth
     /// <summary>
     /// Handler for api/auth/* endpoints
     /// </summary>
-    [Route("api/auth")]
+    [Route("auth")]
     [ApiController]
     public class AuthController
     {

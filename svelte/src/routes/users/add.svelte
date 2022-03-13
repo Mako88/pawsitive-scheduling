@@ -1,15 +1,12 @@
 <script lang="ts">
-    import LayoutGrid, { Cell } from '@smui/layout-grid';
-    import Textfield from '@smui/textfield';
-    import HelperText from '@smui/textfield/helper-text';
-    import Button from '@smui/button';
+import LayoutGrid, { Cell } from '@smui/layout-grid';
+import Textfield from '@smui/textfield';
+import HelperText from '@smui/textfield/helper-text';
+import LoadingButton from '$lib/components/LoadingButton.svelte';
+import { addUser } from "$lib/backendClient";
 
-    let username = '';
-    let password = '';
-
-    const addUser = async () => {
-        
-    };
+let username: string = '';
+let password: string = '';
 </script>
 
 <LayoutGrid>
@@ -22,6 +19,6 @@
         <Textfield variant="outlined" bind:value={password} label="Password">
             <HelperText slot="helper">Enter a Password</HelperText>
         </Textfield>
-        <Button on:click={addUser}>Test</Button>
+        <LoadingButton execute={async () => await addUser(username, password)} />
     </Cell>
 </LayoutGrid>

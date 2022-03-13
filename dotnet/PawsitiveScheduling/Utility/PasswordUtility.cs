@@ -1,11 +1,9 @@
 ﻿using Konscious.Security.Cryptography;
 using PawsitiveScheduling.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Utility
 {
@@ -19,6 +17,11 @@ namespace PawsitiveScheduling.Utility
         /// </summary>
         public void EncryptPassword(string password, User user)
         {
+            if (user.Password == null)
+            {
+                user.Password = new PasswordInfo();
+            }
+
             user.Password.Salt = CreateSalt();
             user.Password.DegreeOfParallelism = EnvironmentVariables.Argon2DegreeOfParallelism;
             user.Password.Iterations = EnvironmentVariables.Argon2Iterations;
@@ -39,13 +42,7 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Generate a password salt
         /// </summary>
-        private byte[] CreateSalt()
-        {
-            var buffer = new byte[16];
-            var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(buffer);
-            return buffer;
-        }
+        private byte[] CreateSalt() => RandomNumberGenerator.GetBytes(16);
 
         /// <summary>
         /// Hash the password
