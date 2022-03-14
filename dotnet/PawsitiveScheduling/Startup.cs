@@ -17,6 +17,8 @@ namespace PawsitiveScheduling
         {
             DotNetEnv.Env.TraversePath().Load();
 
+            services.AddCors(options => options.AddPolicy("cors", builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -54,11 +56,11 @@ namespace PawsitiveScheduling
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("cors");
 
             app.UseEndpoints(endpoints =>
             {

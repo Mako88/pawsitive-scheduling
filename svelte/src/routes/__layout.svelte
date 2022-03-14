@@ -1,37 +1,47 @@
 <script lang="ts">
-    import 'carbon-components-svelte/css/all.css';
-    import {
-        Header,
-        SideNav,
-        SideNavItems,
-        SideNavMenu,
-        SideNavMenuItem,
-        SideNavLink,
-        SideNavDivider,
-        SkipToContent,
-        Content,
-    } from 'carbon-components-svelte';   
+  import {
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    NavLink,
+    Collapse,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+  } from "sveltestrap";
+
+  let isOpen = false;
+
+  const openUpdate = (event) => {
+    isOpen = event.detail.isOpen;
+  };
 </script>
-  
-  <Header company="Pawsitivity" platformName="Scheduling">
-  </Header>
-  
-  <SideNav isOpen={true}>
-    <SideNavItems>
-      <SideNavLink href="/" text="Home" />
-      <SideNavLink href="/users/add" text="Add User" />
-      <SideNavLink text="Link 3" />
-      <SideNavMenu text="Menu">
-        <SideNavMenuItem href="/" text="Link 1" />
-        <SideNavMenuItem href="/" text="Link 2" />
-        <SideNavMenuItem href="/" text="Link 3" />
-      </SideNavMenu>
-      <SideNavDivider />
-      <SideNavLink text="Link 4" />
-    </SideNavItems>
-  </SideNav>
-  
-  <Content>
-    <slot></slot>
-  </Content>
-  
+
+<Navbar color="primary" dark expand="md">
+  <NavbarBrand href="/">Pawsitivity Scheduling</NavbarBrand>
+  <NavbarToggler on:click={() => (isOpen = !isOpen)} />
+  <Collapse {isOpen} navbar expand="md" on:update={openUpdate}>
+    <Nav class="ms-auto" navbar>
+      <NavItem>
+        <NavLink href="/">Home</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/users/add">Add User</NavLink>
+      </NavItem>
+      <Dropdown nav inNavbar>
+        <DropdownToggle nav caret>Options</DropdownToggle>
+        <DropdownMenu end>
+          <DropdownItem>Option 1</DropdownItem>
+          <DropdownItem>Option 2</DropdownItem>
+          <DropdownItem divider />
+          <DropdownItem>Reset</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </Nav>
+  </Collapse>
+</Navbar>
+
+<slot />
