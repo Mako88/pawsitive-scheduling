@@ -44,4 +44,7 @@
   </Collapse>
 </Navbar>
 
-<slot />
+<div class="mt-3">
+    <slot />
+</div>
+
