@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { Button, Spinner } from "sveltestrap";
-  import type { ButtonColor } from "sveltestrap/src/Button";
-
-  export let color: ButtonColor = "primary";
   export let execute: () => Promise<any>;
 
   let isWaiting: boolean;
@@ -19,27 +15,19 @@
   };
 </script>
 
-<Button
-  {color}
-  on:click={async () => await performExecute()}
-  disabled={isWaiting}
-  style="position: relative"
->
+<button on:click={async () => await performExecute()} disabled={isWaiting}>
   {#if isWaiting}
     <div style="visibility: hidden;">
       <slot>Submit</slot>
     </div>
-    <Spinner
-      style="position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    height: 24px;
-    width: 24px;"
-    />
+    <div class="loader small absolute no-margin spinner" disabled />
   {:else}
     <slot>Submit</slot>
   {/if}
-</Button>
+</button>
+
+<style>
+  .spinner {
+    border-color: var(--on-primary);
+  }
+</style>

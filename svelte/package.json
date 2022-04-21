@@ -1,31 +1,37 @@
 {
-  "name": "svelte",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "package": "svelte-kit package",
-    "preview": "svelte-kit preview",
-    "prepare": "svelte-kit sync",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
-  },
-  "devDependencies": {
-    "@fullcalendar/core": "^5.10.1",
-    "@fullcalendar/daygrid": "^5.10.1",
-    "@fullcalendar/interaction": "^5.10.1",
-    "@fullcalendar/scrollgrid": "^5.10.1",
-    "@fullcalendar/timegrid": "^5.10.1",
-    "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "next",
-    "axios": "^0.26.1",
-    "bootstrap-icons": "^1.8.1",
-    "svelte": "^3.44.0",
-    "svelte-check": "^2.2.6",
-    "svelte-preprocess": "^4.10.4",
-    "sveltestrap": "^5.9.0",
-    "tslib": "^2.3.1",
-    "typescript": "~4.6.2"
-  },
-  "type": "module"
+    "name": "routify-starter",
+    "private": true,
+    "scripts": {
+        "dev": "run-p dev:*",
+        "dev:routify": "routify",
+        "dev:vite": "vite",
+        "preview": "vite preview",
+        "build": "run-s build:*",
+        "build:routify": "routify -b",
+        "build:vite": "vite build",
+        "check": "svelte-check --tsconfig ./tsconfig.json"
+    },
+    "devDependencies": {
+        "@roxi/routify": "^2.18.4",
+        "@sveltejs/vite-plugin-svelte": "^1.0.0-next.34",
+        "@tsconfig/svelte": "^3.0.0",
+        "autoprefixer": "^10.4.2",
+        "axios": "^0.26.1",
+        "beercss": "^2.0.26",
+        "npm-run-all": "^4.1.5",
+        "postcss": "^8.4.5",
+        "postcss-import": "^14.0.2",
+        "svelte": "^3.45.0",
+        "svelte-check": "^2.4.6",
+        "svelte-preprocess": "^4.10.1",
+        "tslib": "^2.3.1",
+        "typescript": "^4.6.3",
+        "vite": "^2.7.10",
+        "vite-tsconfig-paths": "^3.4.1"
+    },
+    "dependencies": {
+        "@fullcalendar/core": "^5.11.0",
+        "@fullcalendar/interaction": "^5.11.0",
+        "@fullcalendar/resource-timegrid": "^5.11.0"
+    }
 }
