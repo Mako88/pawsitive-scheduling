@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Utility.DI;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,6 +12,7 @@ namespace PawsitiveScheduling.Utility
     /// <summary>
     /// Utility for interacting with the database
     /// </summary>
+    [Component(Singleton = true)]
     public class DatabaseUtility : IDatabaseUtility
     {
         private readonly IMongoDatabase database;

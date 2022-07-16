@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.DI;
 using PawsitivityScheduler.Data.Breeds;
 using System;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace PawsitiveScheduling.Initialization
     /// <summary>
     /// Class to add default breed information to the database
     /// </summary>
-    public class BreedInitializer
+    [Component]
+    public class BreedInitializer : IInitializer
     {
         private readonly IDatabaseUtility dbUtility;
 

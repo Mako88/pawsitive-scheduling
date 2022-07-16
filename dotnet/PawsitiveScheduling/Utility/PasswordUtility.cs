@@ -1,5 +1,6 @@
 ﻿using Konscious.Security.Cryptography;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Utility.DI;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -10,6 +11,7 @@ namespace PawsitiveScheduling.Utility
     /// <summary>
     /// Utility for interacting with passwords
     /// </summary>
+    [Component]
     public class PasswordUtility : IPasswordUtility
     {
         /// <summary>

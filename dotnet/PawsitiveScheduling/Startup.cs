@@ -1,3 +1,4 @@
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using PawsitiveScheduling.Initialization;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.DI;
 
 namespace PawsitiveScheduling
 {
@@ -30,22 +32,14 @@ namespace PawsitiveScheduling
             });
 
             services.AddSwaggerGenNewtonsoftSupport();
-
-            services.AddLogging();
-
-            RegisterServices(services);
         }
 
         /// <summary>
-        /// Register custom services
+        /// Configure the service container
         /// </summary>
-        private void RegisterServices(IServiceCollection services)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
-            services.AddSingleton<IDatabaseUtility, DatabaseUtility>();
-
-            services.AddScoped<IPasswordUtility, PasswordUtility>();
-
-            services.AddHostedService<Initializer>();
+            builder.RegisterModule(new AutofacModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

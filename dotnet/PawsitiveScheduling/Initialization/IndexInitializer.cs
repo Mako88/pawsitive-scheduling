@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.DI;
 using PawsitivityScheduler.Data.Breeds;
 using System.Threading.Tasks;
 
@@ -8,7 +9,8 @@ namespace PawsitiveScheduling.Initialization
     /// <summary>
     /// Initialize indexes
     /// </summary>
-    public class IndexInitializer
+    [Component]
+    public class IndexInitializer : IInitializer
     {
         private readonly IDatabaseUtility dbUtility;
 
