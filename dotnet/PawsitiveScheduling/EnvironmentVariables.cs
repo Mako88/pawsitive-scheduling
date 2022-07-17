@@ -1,5 +1,4 @@
-﻿using PawsitiveScheduling.Utility.Extensions;
-using System;
+﻿using System;
 
 namespace PawsitiveScheduling
 {
@@ -14,7 +13,7 @@ namespace PawsitiveScheduling
 
         public static int Argon2Iterations = GetEnvironmentVariable("ARGON2_ITERATIONS", 4);
 
-        public static int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024*1024);
+        public static int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024 * 1024);
 
         public static string JwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
 

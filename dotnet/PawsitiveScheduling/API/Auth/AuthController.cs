@@ -1,20 +1,13 @@
 ﻿using Be.Vlaanderen.Basisregisters.Generators.Guid;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MongoDB.Bson;
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Repositories;
-using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
-using PawsitiveScheduling.Utility.Auth.DTO;
-using PawsitiveScheduling.Utility.Extensions;
-using System;
-using System.Linq;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth
@@ -95,8 +88,8 @@ namespace PawsitiveScheduling.API.Auth
             {
                 userId = tokenUtility.GetUserId(User);
             }
-            catch (AuthenticationException) 
-            { 
+            catch (AuthenticationException)
+            {
                 return StatusCode(403, "Sid claim missing from token");
             }
 

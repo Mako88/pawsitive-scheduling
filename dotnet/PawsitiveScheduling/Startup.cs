@@ -8,8 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using PawsitiveScheduling.Initialization;
-using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
 using System.Text;
 

@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace PawsitiveScheduling.Utility.Extensions
+﻿namespace PawsitiveScheduling.Utility.Extensions
 {
     /// <summary>
     /// String extensions

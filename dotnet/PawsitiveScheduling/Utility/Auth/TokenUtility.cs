@@ -1,18 +1,14 @@
 ﻿using Be.Vlaanderen.Basisregisters.Generators.Guid;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility.Auth.DTO;
 using PawsitiveScheduling.Utility.DI;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,7 +90,7 @@ namespace PawsitiveScheduling.Utility.Auth
         public ObjectId GetUserId(ClaimsPrincipal user)
         {
             var userIdString = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
-            
+
             if (userIdString == null)
             {
                 throw new AuthenticationException("Sid claim missing from token");
@@ -106,6 +102,6 @@ namespace PawsitiveScheduling.Utility.Auth
             }
 
             return userId;
-        } 
+        }
     }
 }

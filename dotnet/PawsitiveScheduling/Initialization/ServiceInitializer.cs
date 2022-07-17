@@ -1,11 +1,8 @@
-﻿using Autofac.Features.Indexed;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
