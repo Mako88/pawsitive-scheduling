@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth.DTO
 {
-    public class TokenResponse
+    public class AuthenticationRequest
     {
-        public string AccessToken { get; set; }
+        public string Username { get; set; }
 
-        public string RefreshToken { get; set; }
+        public string Password { get; set; }
     }
 }

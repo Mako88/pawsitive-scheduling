@@ -39,7 +39,7 @@ namespace PawsitiveScheduling.Utility
         public Task<T> AddEntity<T>(T entity) where T : Entity, new();
 
         /// <summary>
-        /// Add an entity
+        /// Update an entity
         /// </summary>
         public Task<T> UpdateEntity<T>(T entity) where T : Entity, new();
 

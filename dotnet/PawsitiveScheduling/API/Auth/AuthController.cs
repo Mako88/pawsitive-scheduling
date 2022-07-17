@@ -1,7 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Be.Vlaanderen.Basisregisters.Generators.Guid;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using MongoDB.Bson;
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.Auth;
+using PawsitiveScheduling.Utility.Auth.DTO;
+using PawsitiveScheduling.Utility.Extensions;
+using System;
+using System.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth
@@ -9,20 +22,23 @@ namespace PawsitiveScheduling.API.Auth
     /// <summary>
     /// Handler for api/auth/* endpoints
     /// </summary>
-    [Route("auth")]
+    [Route("api/auth")]
     [ApiController]
-    public class AuthController
+    [Authorize]
+    public class AuthController : Controller
     {
-        private readonly IDatabaseUtility dbUtility;
-        private readonly IPasswordUtility passwordUtility;
+        private readonly IUserRepository userRepo;
+        private readonly IHashingUtility hashingUtility;
+        private readonly ITokenUtility tokenUtility;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public AuthController(IDatabaseUtility dbUtility, IPasswordUtility passwordUtility)
+        public AuthController(IUserRepository userRepo, IHashingUtility hashingUtility, ITokenUtility tokenUtility)
         {
-            this.dbUtility = dbUtility;
-            this.passwordUtility = passwordUtility;
+            this.userRepo = userRepo;
+            this.hashingUtility = hashingUtility;
+            this.tokenUtility = tokenUtility;
         }
 
         /// <summary>
@@ -30,21 +46,82 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         [HttpPost]
         [Route("register")]
-        public async Task<TokenResponse> RegisterUser([FromBody] CreateUserRequest request)
+        [AllowAnonymous]
+        public async Task RegisterUser([FromBody] AuthenticationRequest request)
         {
-            // TODO: Authenticate the caller before registering a user
-
             var user = new User
             {
                 Username = request.Username
             };
 
-            passwordUtility.EncryptPassword(request.Password, user);
+            user.Password = hashingUtility.CreateHash(request.Password);
 
-            await dbUtility.AddEntity(user);
+            await userRepo.AddEntity(user);
+        }
 
-            // TODO: Generate tokens and return them
-            return new TokenResponse();
+        /// <summary>
+        /// Authenticate a user
+        /// </summary>
+        [HttpPost]
+        [Route("authenticate")]
+        [AllowAnonymous]
+        public async Task<ObjectResult> Authenticate([FromBody] AuthenticationRequest request)
+        {
+            var user = await userRepo.GetUserByUsername(request.Username);
+
+            if (user == null)
+            {
+                return StatusCode(404, "Username not found");
+            }
+
+            if (!hashingUtility.Verify(request.Password, user.Password))
+            {
+                return StatusCode(403, "Invalid password");
+            }
+
+            return StatusCode(200, await tokenUtility.CreateTokens(user, HttpContext.Connection.RemoteIpAddress?.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch new tokens
+        /// </summary>
+        [HttpGet]
+        [Route("token")]
+        public async Task<ObjectResult> RefreshToken()
+        {
+            ObjectId userId;
+
+            try
+            {
+                userId = tokenUtility.GetUserId(User);
+            }
+            catch (AuthenticationException) 
+            { 
+                return StatusCode(403, "Sid claim missing from token");
+            }
+
+            var user = await userRepo.GetEntity<User>(userId);
+
+            if (user == null)
+            {
+                return StatusCode(403, "Invalid user in token");
+            }
+
+            var hashedIp = Deterministic.Create(Constants.IpAddressDeterministicNamespace, HttpContext.Connection.RemoteIpAddress?.ToString());
+
+            var refreshToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+            if (!user.RefreshTokens.TryGetValue(hashedIp.ToString(), out var currentToken))
+            {
+                return StatusCode(403, "Refresh token IP does not match current request IP");
+            }
+
+            if (refreshToken != currentToken)
+            {
+                return StatusCode(403, "Invalid refresh token");
+            }
+
+            return StatusCode(200, await tokenUtility.CreateTokens(user, HttpContext.Connection.RemoteIpAddress?.ToString()));
         }
     }
 }

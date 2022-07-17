@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PawsitiveScheduling.Utility.Extensions;
+using System;
 
 namespace PawsitiveScheduling
 {
@@ -7,13 +8,19 @@ namespace PawsitiveScheduling
     /// </summary>
     public static class EnvironmentVariables
     {
-        public static bool IsLocal = GetEnvironmentVariable("IS_LOCAL", true);
+        public static bool IsLocal = GetEnvironmentVariable("IS_LOCAL", false);
 
         public static int Argon2DegreeOfParallelism = GetEnvironmentVariable("ARGON2_DEGREE_OF_PARALLELISM", 8);
 
         public static int Argon2Iterations = GetEnvironmentVariable("ARGON2_ITERATIONS", 4);
 
         public static int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024*1024);
+
+        public static string JwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+
+        public static string JwtIssuer = GetEnvironmentVariable("JWT_ISSUER", "https://pawsitivitypetspa.com");
+
+        public static string JwtAudience = GetEnvironmentVariable("JWT_AUDIENCE", "pawsitivity");
 
         /// <summary>
         /// Get the connection string for the database
@@ -37,31 +44,19 @@ namespace PawsitiveScheduling
         /// <summary>
         /// Get an environment variable as a boolean
         /// </summary>
-        public static bool GetEnvironmentVariable(string variableName, bool defaultValue)
-        {
-            try
-            {
-                return bool.Parse(Environment.GetEnvironmentVariable(variableName));
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-        }
+        public static bool GetEnvironmentVariable(string variableName, bool defaultValue) =>
+            DotNetEnv.Env.GetBool(variableName, defaultValue);
 
         /// <summary>
         /// Get an environment variable as an int
         /// </summary>
-        public static int GetEnvironmentVariable(string variableName, int defaultValue)
-        {
-            try
-            {
-                return int.Parse(Environment.GetEnvironmentVariable(variableName));
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-        }
+        public static int GetEnvironmentVariable(string variableName, int defaultValue) =>
+            DotNetEnv.Env.GetInt(variableName, defaultValue);
+
+        /// <summary>
+        /// Get an environment variable with a default value
+        /// </summary>
+        public static string GetEnvironmentVariable(string variableName, string defaultValue) =>
+            DotNetEnv.Env.GetString(variableName, defaultValue);
     }
 }

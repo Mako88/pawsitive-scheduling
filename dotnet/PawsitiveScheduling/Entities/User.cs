@@ -1,6 +1,9 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Entities
@@ -17,12 +20,16 @@ namespace PawsitiveScheduling.Entities
 
         public string Username { get; set; }
 
-        public PasswordInfo Password { get; set; }
+        public HashInfo Password { get; set; } = new();
+
+        public UserLevel UserLevel { get; set; }
+
+        public Dictionary<string, string> RefreshTokens { get; set; } = new();
     }
 
-    public class PasswordInfo
+    public class HashInfo
     {
-        public byte[] HashedPassword { get; set; }
+        public byte[] HashedText { get; set; }
 
         public byte[] Salt { get; set; }
 
@@ -31,5 +38,12 @@ namespace PawsitiveScheduling.Entities
         public int Iterations { get; set; }
 
         public int MemorySize { get; set; }
+    }
+
+    public enum UserLevel
+    {
+        Customer = 0,
+        Employee = 1,
+        Admin = 2,
     }
 }

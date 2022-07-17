@@ -62,13 +62,13 @@ namespace PawsitiveScheduling.Utility
         }
 
         /// <summary>
-        /// Add an entity
+        /// Update an entity
         /// </summary>
         public async Task<T> UpdateEntity<T>(T entity) where T : Entity, new()
         {
             var collection = GetCollection<T>();
 
-            await collection.InsertOneAsync(entity).ConfigureAwait(false);
+            await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity).ConfigureAwait(false);
 
             return entity;
         }
@@ -94,7 +94,7 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Get the collection for the given type
         /// </summary>
-        private IMongoCollection<T> GetCollection<T>() where T : Entity, new() =>
+        protected IMongoCollection<T> GetCollection<T>() where T : Entity, new() =>
             Database.GetCollection<T>(new T().CollectionName);
     }
 }
