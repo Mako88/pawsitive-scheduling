@@ -1,9 +1,9 @@
-﻿using PawsitiveScheduling;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using PawsitiveScheduling;
 using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Extensions;
+using PawsitiveScheduling.Utility.Extensions;
 using PawsitivityScheduler.Data.Breeds;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PawsitivityScheduler.Data
 {
@@ -15,7 +15,7 @@ namespace PawsitivityScheduler.Data
 
         public BreedName Breed { get; set; }
 
-        [NotMapped]
+        [BsonIgnore]
         public string BreedDisplayName => Breed.GetDescription();
 
         public int AdditionalGroomMinutes { get; set; }
@@ -24,14 +24,14 @@ namespace PawsitivityScheduler.Data
 
         public DateTime BirthDate { get; set; }
 
-        [NotMapped]
+        [BsonIgnore]
         public int Age
         {
             get
             {
                 int age = DateTime.Today.Year - BirthDate.Year;
 
-                // Account for leap years
+                // Subtract a year if 
                 if (BirthDate > DateTime.Today.AddYears(-age))
                 {
                     age--;
