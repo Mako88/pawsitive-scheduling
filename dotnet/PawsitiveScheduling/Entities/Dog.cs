@@ -9,10 +9,7 @@ namespace PawsitivityScheduler.Data
 {
     public class Dog : Entity
     {
-        public Dog()
-        {
-            CollectionName = Constants.DogCollectionName;
-        }
+        public override string CollectionName => Constants.DogCollectionName;
 
         public string Name { get; set; }
 

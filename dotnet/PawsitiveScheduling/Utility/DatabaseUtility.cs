@@ -15,12 +15,7 @@ namespace PawsitiveScheduling.Utility
     [Component(Singleton = true)]
     public class DatabaseUtility : IDatabaseUtility
     {
-        private readonly IMongoDatabase database;
-
-        /// <summary>
-        /// Direct access to the database
-        /// </summary>
-        public IMongoDatabase Database { get => database; }
+        protected readonly IMongoDatabase database;
 
         /// <summary>
         /// Constructor
@@ -95,6 +90,19 @@ namespace PawsitiveScheduling.Utility
         /// Get the collection for the given type
         /// </summary>
         protected IMongoCollection<T> GetCollection<T>() where T : Entity, new() =>
-            Database.GetCollection<T>(new T().CollectionName);
+            database.GetCollection<T>(new T().CollectionName);
+
+        /// <summary>
+        /// Create an index
+        /// </summary>
+        public async Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity, new()
+        {
+            var collection = database.GetCollection<T>(new T().CollectionName);
+            var index = Builders<T>.IndexKeys.Ascending(definition);
+
+            return await collection.Indexes
+                .CreateOneAsync(new CreateIndexModel<T>(index, new CreateIndexOptions { Unique = true, Name = name }))
+                .ConfigureAwait(false);
+        }
     }
 }

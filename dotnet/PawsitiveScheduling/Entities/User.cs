@@ -7,10 +7,7 @@ namespace PawsitiveScheduling.Entities
     /// </summary>
     public class User : Entity
     {
-        public User()
-        {
-            CollectionName = "users";
-        }
+        public override string CollectionName => Constants.UserCollectionName;
 
         public string Username { get; set; }
 

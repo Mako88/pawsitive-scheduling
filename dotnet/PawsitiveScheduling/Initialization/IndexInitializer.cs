@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+﻿using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
 using PawsitivityScheduler.Data.Breeds;
@@ -27,12 +27,11 @@ namespace PawsitiveScheduling.Initialization
         /// </summary>
         public async Task Initialize()
         {
-            var collection = dbUtility.Database.GetCollection<Breed>(Constants.BreedCollectionName);
-            var indexKeysDefinition = Builders<Breed>.IndexKeys.Ascending(x => x.Name);
-            await collection.Indexes
-                .CreateOneAsync(new CreateIndexModel<Breed>(indexKeysDefinition,
-                    new CreateIndexOptions { Unique = true, Name = Constants.BreedNameIndexName }))
-                .ConfigureAwait(false);
+            await dbUtility.CreateIndex<Breed>(x => x.Name, Constants.BreedNameIndexName);
+
+            await dbUtility.CreateIndex<Appointment>(x => x.ScheduledTime, Constants.AppointmentScheduledTimeIndexName);
+
+            await dbUtility.CreateIndex<Appointment>(x => x.GroomerId, Constants.AppointmentGroomerIdIndexName);
         }
     }
 }

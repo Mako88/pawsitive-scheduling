@@ -10,7 +10,15 @@ namespace PawsitiveScheduling
 
         public static readonly string DogCollectionName = "dogs";
 
+        public static readonly string UserCollectionName = "users";
+
+        public static readonly string AppointmentCollectionName = "appointments";
+
         public static readonly string BreedNameIndexName = "breedName";
+
+        public static readonly string AppointmentScheduledTimeIndexName = "appointmentScheduledTime";
+
+        public static readonly string AppointmentGroomerIdIndexName = "appointmentGroomerId";
 
         public static readonly Guid IpAddressDeterministicNamespace = Guid.Parse("F43FA0D2-1D0E-45EF-B0DA-CD7A92A34937");
     }

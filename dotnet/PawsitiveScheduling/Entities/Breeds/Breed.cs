@@ -5,10 +5,7 @@ namespace PawsitivityScheduler.Data.Breeds
 {
     public class Breed : Entity
     {
-        public Breed()
-        {
-            CollectionName = Constants.BreedCollectionName;
-        }
+        public override string CollectionName => Constants.BreedCollectionName;
 
         public BreedName Name { get; set; }
 

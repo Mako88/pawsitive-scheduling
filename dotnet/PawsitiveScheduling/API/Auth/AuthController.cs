@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace PawsitiveScheduling.API.Auth
 {
     /// <summary>
-    /// Handler for api/auth/* endpoints
+    /// Controller for api/auth/* endpoints
     /// </summary>
     [Route("api/auth")]
     [ApiController]

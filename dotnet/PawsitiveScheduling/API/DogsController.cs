@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using PawsitiveScheduling.Utility;
 using PawsitivityScheduler.Data;
@@ -7,10 +8,11 @@ using System.Threading.Tasks;
 namespace PawsitiveScheduling.API.Auth
 {
     /// <summary>
-    /// Handler for api/dogs/* endpoints
+    /// Controller for api/dogs/* endpoints
     /// </summary>
     [Route("api/dogs")]
     [ApiController]
+    [Authorize]
     public class DogsController : ControllerBase
     {
         private readonly IDatabaseUtility dbUtility;
