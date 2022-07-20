@@ -68,7 +68,10 @@ namespace PawsitiveScheduling.Utility.DI
 
                         foreach (var implementedInterface in type.GetInterfaces())
                         {
-                            registration.As(implementedInterface);
+                            if (implementedInterface != typeof(IDisposable))
+                            {
+                                registration.As(implementedInterface);
+                            }
                         }
 
                         break;

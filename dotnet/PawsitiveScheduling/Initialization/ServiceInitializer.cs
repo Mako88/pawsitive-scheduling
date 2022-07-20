@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
 using System;
@@ -17,12 +16,12 @@ namespace PawsitiveScheduling.Initialization
     {
         private readonly IDatabaseUtility dbUtility;
         private readonly IEnumerable<IInitializer> initializers;
-        private readonly ILogger<ServiceInitializer> log;
+        private readonly ILog log;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ServiceInitializer(IDatabaseUtility dbUtility, IEnumerable<IInitializer> initializers, ILogger<ServiceInitializer> log)
+        public ServiceInitializer(IDatabaseUtility dbUtility, IEnumerable<IInitializer> initializers, ILog log)
         {
             this.dbUtility = dbUtility;
             this.initializers = initializers;
@@ -43,7 +42,7 @@ namespace PawsitiveScheduling.Initialization
             }
             catch (Exception ex)
             {
-                log.LogError(ex, "An error occurred seeding the DB");
+                log.Error("An error occurred seeding the DB", ex);
             }
         }
 

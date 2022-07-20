@@ -1,38 +1,46 @@
 ﻿using Itenso.TimePeriod;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Appointments.DTO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Repositories;
+using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.DI;
 using System;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Appointments
 {
     /// <summary>
-    /// Controller for api/appointments/* endpoints
+    /// Handler for adding an appointment
     /// </summary>
-    [Route("api/appointments")]
-    [ApiController]
-    [Authorize]
-    public class AppointmentsController : ControllerBase
+    [Component]
+    public class AddAppointmentHandler : Handler
     {
         private readonly IAppointmentRepository appointmentRepo;
+        private readonly ILog log;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public AppointmentsController(IAppointmentRepository appointmentRepo)
+        public AddAppointmentHandler(IAppointmentRepository appointmentRepo, Func<string, ILog> logFactory)
         {
             this.appointmentRepo = appointmentRepo;
+            log = logFactory("AddAppointment");
         }
 
         /// <summary>
-        /// Create a new appointment
+        /// Map this handler to an endpoint
         /// </summary>
-        [HttpPost]
-        [Route("create")]
-        public async Task<string> CreateAppointment([FromBody] CreateAppointmentRequest request)
+        public override void MapEndpoint(WebApplication app) => app.MapPost("api/appointments/add", Handle);
+
+        /// <summary>
+        /// Handle the request
+        /// </summary>
+        [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer}")]
+        public async Task<IResult> Handle([FromBody] CreateAppointmentRequest request)
         {
             var scheduledTime = new TimeBlock(request.StartDate, TimeSpan.FromMinutes(request.Duration));
 
@@ -44,7 +52,7 @@ namespace PawsitiveScheduling.API.Appointments
 
             var savedAppointment = await appointmentRepo.AddEntity(appointment).ConfigureAwait(false);
 
-            return savedAppointment.Id.ToString();
+            return CreateResponse(new { Id = savedAppointment.Id.ToString() });
         }
     }
 }

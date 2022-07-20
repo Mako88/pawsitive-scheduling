@@ -13,7 +13,7 @@ namespace PawsitiveScheduling.Entities
 
         public HashInfo Password { get; set; } = new();
 
-        public UserLevel UserLevel { get; set; }
+        public List<string> Roles { get; set; } = new();
 
         public Dictionary<string, string> RefreshTokens { get; set; } = new();
     }
@@ -31,10 +31,11 @@ namespace PawsitiveScheduling.Entities
         public int MemorySize { get; set; }
     }
 
-    public enum UserLevel
+    public static class UserRoles
     {
-        Customer = 0,
-        Employee = 1,
-        Admin = 2,
+        public const string Customer = "Customer";
+        public const string Groomer = "Groomer";
+        public const string Receptionist = "Receptionist";
+        public const string Admin = "Admin";
     }
 }

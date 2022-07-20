@@ -1,5 +1,7 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Logging;
+using PawsitiveScheduling.Utility.Extensions;
+using Serilog;
+using System;
 
 namespace PawsitiveScheduling.Utility.DI
 {
@@ -13,21 +15,27 @@ namespace PawsitiveScheduling.Utility.DI
         /// </summary>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(x =>
-                LoggerFactory.Create(log =>
-                {
-                    log.SetMinimumLevel(LogLevel.Debug);
-                    log.AddConsole();
-                }))
-                .As<ILoggerFactory>()
-                .SingleInstance()
-                .AutoActivate();
+            builder.Register((string requestType) => CreateLogger(requestType)).InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(Logger<>))
-                .As(typeof(ILogger<>))
-                .SingleInstance();
+            //builder.RegisterInstance(CreateLogger()).SingleInstance();
 
             ComponentAttribute.RegisterComponents(builder);
+        }
+
+        /// <summary>
+        /// Create a logger
+        /// </summary>
+        private ILog CreateLogger(string requestType = null)
+        {
+            var path = requestType.HasValue() ?
+                $"{Environment.CurrentDirectory}\\Logs\\Requests\\{requestType}\\{DateTime.Now:hh-mm-ss-fff}.txt" :
+                $"{Environment.CurrentDirectory}\\Logs\\log.txt";
+
+            return new LogWrapper(new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Async(x => x.File(path, shared: true, flushToDiskInterval: TimeSpan.FromSeconds(10), rollOnFileSizeLimit: true))
+                .WriteTo.Async(x => x.Debug())
+                .CreateLogger());
         }
     }
 }
