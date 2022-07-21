@@ -21,7 +21,7 @@ namespace PawsitiveScheduling.API.Dogs
         /// <summary>
         /// Constructor
         /// </summary>
-        public AddDogHandler(IDatabaseUtility dbUtility, ILog log)
+        public AddDogHandler(IDatabaseUtility dbUtility, ILog log) : base(log)
         {
             this.dbUtility = dbUtility;
             this.log = log;
@@ -44,7 +44,7 @@ namespace PawsitiveScheduling.API.Dogs
 
             log.Info($"Saved {savedDog.Id}");
 
-            return savedDog.Id.ToString();
+            return savedDog.Id;
         }
     }
 }

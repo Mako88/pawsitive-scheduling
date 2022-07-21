@@ -1,12 +1,12 @@
 ﻿using PawsitiveScheduling;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Utility.Attributes;
 
 namespace PawsitivityScheduler.Data.Breeds
 {
+    [BsonCollectionName(Constants.BreedCollectionName)]
     public class Breed : Entity
     {
-        public override string CollectionName => Constants.BreedCollectionName;
-
         public BreedName Name { get; set; }
 
         public int GroomMinutes { get; set; }

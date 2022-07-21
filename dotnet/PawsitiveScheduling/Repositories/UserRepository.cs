@@ -11,9 +11,9 @@ namespace PawsitiveScheduling.Repositories
     public class UserRepository : DatabaseUtility, IUserRepository
     {
         /// <summary>
-        /// Get a user by username
+        /// Get a user by email
         /// </summary>
-        public async Task<User> GetUserByUsername(string username) =>
-            await GetCollection<User>().Find(x => x.Username == username).FirstOrDefaultAsync().ConfigureAwait(false);
+        public async Task<User> GetUserByEmail(string email) =>
+            await GetCollection<User>().Find(x => x.Email == email).SingleOrDefaultAsync().ConfigureAwait(false);
     }
 }

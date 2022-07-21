@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using PawsitiveScheduling.Entities;
+﻿using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility.Auth.DTO;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,6 +18,6 @@ namespace PawsitiveScheduling.Utility.Auth
         /// <summary>
         /// Get a user ID from a ClaimsPrincipal
         /// </summary>
-        ObjectId GetUserId(ClaimsPrincipal user);
+        string GetUserId(ClaimsPrincipal user);
     }
 }

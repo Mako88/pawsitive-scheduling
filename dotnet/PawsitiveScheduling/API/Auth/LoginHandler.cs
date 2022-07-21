@@ -29,7 +29,7 @@ namespace PawsitiveScheduling.API.Auth
         public LoginHandler(IHashingUtility hashingUtility,
             IUserRepository userRepo,
             ITokenUtility tokenUtility,
-            ILog log)
+            ILog log) : base(log)
         {
             this.hashingUtility = hashingUtility;
             this.userRepo = userRepo;
@@ -48,15 +48,15 @@ namespace PawsitiveScheduling.API.Auth
         [AllowAnonymous]
         public async Task<IResult> Handle([FromBody] LoginRequest request, HttpContext context)
         {
-            log.Info($"Authenticating {request.Username}");
+            log.Info($"Authenticating {request.Email}");
 
-            var user = await userRepo.GetUserByUsername(request.Username);
+            var user = await userRepo.GetUserByEmail(request.Email);
 
             if (user == null)
             {
-                log.Info($"Could not find username '{request.Username}'");
+                log.Info($"Could not find user with email '{request.Email}'");
 
-                return CreateResponse(HttpStatusCode.NotFound, "Username not found");
+                return CreateResponse(HttpStatusCode.NotFound, "User not found");
             }
 
             if (!hashingUtility.Verify(request.Password, user.Password))

@@ -10,8 +10,8 @@ namespace PawsitiveScheduling.Repositories
     public interface IUserRepository : IDatabaseUtility
     {
         /// <summary>
-        /// Get a user by username
+        /// Get a user by email
         /// </summary>
-        Task<User> GetUserByUsername(string username);
+        Task<User> GetUserByEmail(string email);
     }
 }

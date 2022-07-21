@@ -32,6 +32,8 @@ namespace PawsitiveScheduling.Initialization
             await dbUtility.CreateIndex<Appointment>(x => x.ScheduledTime, Constants.AppointmentScheduledTimeIndexName);
 
             await dbUtility.CreateIndex<Appointment>(x => x.GroomerId, Constants.AppointmentGroomerIdIndexName);
+
+            await dbUtility.CreateIndex<User>(x => x.Email, Constants.UserEmailIndexName);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Be.Vlaanderen.Basisregisters.Generators.Guid;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility.Auth.DTO;
 using PawsitiveScheduling.Utility.DI;
+using PawsitiveScheduling.Utility.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -44,8 +44,8 @@ namespace PawsitiveScheduling.Utility.Auth
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Sid, user.Id),
+                new Claim(ClaimTypes.Name, user.Email),
             };
 
             foreach (var role in user.Roles)
@@ -67,7 +67,7 @@ namespace PawsitiveScheduling.Utility.Auth
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                    new Claim(ClaimTypes.Sid, user.Id),
                 }),
                 Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = signingCreds,
@@ -94,18 +94,13 @@ namespace PawsitiveScheduling.Utility.Auth
         /// <summary>
         /// Get a user ID from a ClaimsPrincipal
         /// </summary>
-        public ObjectId GetUserId(ClaimsPrincipal user)
+        public string GetUserId(ClaimsPrincipal user)
         {
-            var userIdString = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+            var userId = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
 
-            if (userIdString == null)
+            if (!userId.HasValue())
             {
                 throw new AuthenticationException("Sid claim missing from token");
-            }
-
-            if (!ObjectId.TryParse(userIdString, out var userId))
-            {
-                throw new AuthenticationException("Unable to parse ID from token");
             }
 
             return userId;

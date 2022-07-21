@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using MongoDB.Bson;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
@@ -29,9 +28,7 @@ namespace PawsitiveScheduling.API.Auth
         /// <summary>
         /// Constructor
         /// </summary>
-        public RefreshTokenHandler(IUserRepository userRepo,
-            ITokenUtility tokenUtility,
-            ILog log)
+        public RefreshTokenHandler(IUserRepository userRepo, ITokenUtility tokenUtility, ILog log) : base(log)
         {
             this.userRepo = userRepo;
             this.tokenUtility = tokenUtility;
@@ -49,7 +46,7 @@ namespace PawsitiveScheduling.API.Auth
         [Authorize]
         public async Task<IResult> Handle(ClaimsPrincipal claimsUser, HttpContext context, HttpRequest request)
         {
-            ObjectId userId;
+            string userId;
 
             try
             {
@@ -59,7 +56,7 @@ namespace PawsitiveScheduling.API.Auth
             }
             catch (AuthenticationException ex)
             {
-                log.Error("Sid claim missing from token", ex);
+                log.Error(ex.Message, ex);
                 return CreateResponse(HttpStatusCode.Forbidden, "Sid claim missing from token");
             }
 

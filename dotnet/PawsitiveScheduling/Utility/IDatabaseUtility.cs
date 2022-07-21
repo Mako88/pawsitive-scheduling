@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using PawsitiveScheduling.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,41 +15,41 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Get an entity by ID
         /// </summary>
-        public Task<T> GetEntity<T>(ObjectId id) where T : Entity, new();
+        Task<T> GetEntity<T>(string id) where T : Entity;
 
         /// <summary>
         /// Get entities using a filter expression
         /// </summary>
-        public Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity, new();
+        Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity;
 
         /// <summary>
-        /// Get entities using a filter definition
+        /// Get all entities in a collection
         /// </summary>
-        public Task<IEnumerable<T>> GetEntities<T>(FilterDefinition<T> filter) where T : Entity, new();
+        Task<IEnumerable<T>> GetAllEntities<T>() where T : Entity;
 
         /// <summary>
         /// Add an entity
         /// </summary>
-        public Task<T> AddEntity<T>(T entity) where T : Entity, new();
+        Task<T> AddEntity<T>(T entity) where T : Entity;
 
         /// <summary>
         /// Update an entity
         /// </summary>
-        public Task<T> UpdateEntity<T>(T entity) where T : Entity, new();
+        Task<T> UpdateEntity<T>(T entity) where T : Entity;
 
         /// <summary>
         /// Delete an entity
         /// </summary>
-        public Task<DeleteResult> DeleteEntity<T>(ObjectId id) where T : Entity, new();
+        Task<DeleteResult> DeleteEntity<T>(string id) where T : Entity;
 
         /// <summary>
         /// Delete an entity, returning it
         /// </summary>
-        public Task<T> DeleteAndReturnEntity<T>(ObjectId id) where T : Entity, new();
+        Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity;
 
         /// <summary>
         /// Create an index
         /// </summary>
-        Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity, new();
+        Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity;
     }
 }

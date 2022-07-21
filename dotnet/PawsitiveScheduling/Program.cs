@@ -123,6 +123,8 @@ namespace PawsitiveScheduling
         {
             IoC.Initialize(app);
 
+            DatabaseUtility.Initialize();
+
             DotNetEnv.Env.TraversePath().Load();
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings

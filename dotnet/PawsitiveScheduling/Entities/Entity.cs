@@ -8,9 +8,8 @@ namespace PawsitiveScheduling.Entities
     /// </summary>
     public abstract class Entity
     {
-        public virtual ObjectId Id { get; set; }
-
-        [BsonIgnore]
-        public abstract string CollectionName { get; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public virtual string Id { get; set; }
     }
 }

@@ -1,16 +1,19 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using PawsitiveScheduling;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Utility.Attributes;
 using PawsitiveScheduling.Utility.Extensions;
 using PawsitivityScheduler.Data.Breeds;
 using System;
 
 namespace PawsitivityScheduler.Data
 {
+    /// <summary>
+    /// The dog entity
+    /// </summary>
+    [BsonCollectionName(Constants.DogCollectionName)]
     public class Dog : Entity
     {
-        public override string CollectionName => Constants.DogCollectionName;
-
         public string Name { get; set; }
 
         public BreedName Breed { get; set; }
@@ -31,7 +34,7 @@ namespace PawsitivityScheduler.Data
             {
                 int age = DateTime.Today.Year - BirthDate.Year;
 
-                // Subtract a year if 
+                // Subtract a year if their birthday hasn't happened yet this year
                 if (BirthDate > DateTime.Today.AddYears(-age))
                 {
                     age--;

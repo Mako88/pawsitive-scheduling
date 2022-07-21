@@ -25,7 +25,7 @@ namespace PawsitiveScheduling.API.Appointments
         /// <summary>
         /// Constructor
         /// </summary>
-        public AddAppointmentHandler(IAppointmentRepository appointmentRepo, ILog log)
+        public AddAppointmentHandler(IAppointmentRepository appointmentRepo, ILog log) : base(log)
         {
             this.appointmentRepo = appointmentRepo;
             this.log = log;
@@ -52,7 +52,7 @@ namespace PawsitiveScheduling.API.Appointments
 
             var savedAppointment = await appointmentRepo.AddEntity(appointment).ConfigureAwait(false);
 
-            return CreateResponse(new { Id = savedAppointment.Id.ToString() });
+            return CreateResponse(new { Id = savedAppointment.Id });
         }
     }
 }

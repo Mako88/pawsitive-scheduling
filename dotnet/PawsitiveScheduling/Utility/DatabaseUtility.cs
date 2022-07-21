@@ -1,10 +1,12 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Utility.Attributes;
 using PawsitiveScheduling.Utility.DI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Utility
@@ -15,7 +17,9 @@ namespace PawsitiveScheduling.Utility
     [Component(Singleton = true)]
     public class DatabaseUtility : IDatabaseUtility
     {
-        protected readonly IMongoDatabase database;
+        private readonly IMongoDatabase database;
+
+        private static readonly Dictionary<Type, string> CollectionNames = new();
 
         /// <summary>
         /// Constructor
@@ -29,25 +33,25 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Get an entity by ID
         /// </summary>
-        public async Task<T> GetEntity<T>(ObjectId id) where T : Entity, new() =>
-            await GetCollection<T>().Find(x => x.Id == id).FirstOrDefaultAsync().ConfigureAwait(false);
+        public async Task<T> GetEntity<T>(string id) where T : Entity =>
+            await GetCollection<T>().Find(x => x.Id == id).SingleOrDefaultAsync().ConfigureAwait(false);
 
         /// <summary>
         /// Get entities using a filter expression
         /// </summary>
-        public async Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity, new() =>
+        public async Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity =>
             await GetCollection<T>().Find(filter).ToListAsync();
 
         /// <summary>
-        /// Get entities using a filter definition
+        /// Get all entities in a collection
         /// </summary>
-        public async Task<IEnumerable<T>> GetEntities<T>(FilterDefinition<T> filter) where T : Entity, new() =>
-            await GetCollection<T>().Find(filter).ToListAsync();
+        public async Task<IEnumerable<T>> GetAllEntities<T>() where T : Entity =>
+            await GetCollection<T>().Find(_ => true).ToListAsync();
 
         /// <summary>
         /// Add an entity
         /// </summary>
-        public async Task<T> AddEntity<T>(T entity) where T : Entity, new()
+        public async Task<T> AddEntity<T>(T entity) where T : Entity
         {
             var collection = GetCollection<T>();
 
@@ -59,7 +63,7 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Update an entity
         /// </summary>
-        public async Task<T> UpdateEntity<T>(T entity) where T : Entity, new()
+        public async Task<T> UpdateEntity<T>(T entity) where T : Entity
         {
             var collection = GetCollection<T>();
 
@@ -71,13 +75,13 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Delete an entity
         /// </summary>
-        public async Task<DeleteResult> DeleteEntity<T>(ObjectId id) where T : Entity, new() =>
+        public async Task<DeleteResult> DeleteEntity<T>(string id) where T : Entity =>
             await GetCollection<T>().DeleteOneAsync(x => x.Id == id).ConfigureAwait(false);
 
         /// <summary>
         /// Delete an entity, returning it
         /// </summary>
-        public async Task<T> DeleteAndReturnEntity<T>(ObjectId id) where T : Entity, new()
+        public async Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity
         {
             var entity = await GetEntity<T>(id).ConfigureAwait(false);
 
@@ -87,22 +91,42 @@ namespace PawsitiveScheduling.Utility
         }
 
         /// <summary>
-        /// Get the collection for the given type
+        /// Perform initialization
         /// </summary>
-        protected IMongoCollection<T> GetCollection<T>() where T : Entity, new() =>
-            database.GetCollection<T>(new T().CollectionName);
+        public static void Initialize()
+        {
+            var entityTypes = Assembly.GetAssembly(typeof(Entity)).GetTypes().Where(x => x.IsSubclassOf(typeof(Entity)));
+
+            foreach (var entityType in entityTypes)
+            {
+                var attribute = (BsonCollectionNameAttribute) Attribute.GetCustomAttribute(entityType, typeof(BsonCollectionNameAttribute));
+
+                if (attribute == null)
+                {
+                    throw new Exception($"The {entityType.Name} entity does not have the required BsonCollectionName attribute");
+                }
+
+                CollectionNames.Add(entityType, attribute.CollectionName);
+            }
+        }
 
         /// <summary>
         /// Create an index
         /// </summary>
-        public async Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity, new()
+        public async Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity
         {
-            var collection = database.GetCollection<T>(new T().CollectionName);
+            var collection = GetCollection<T>();
             var index = Builders<T>.IndexKeys.Ascending(definition);
 
             return await collection.Indexes
                 .CreateOneAsync(new CreateIndexModel<T>(index, new CreateIndexOptions { Unique = true, Name = name }))
                 .ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Get the collection for the given type
+        /// </summary>
+        protected IMongoCollection<T> GetCollection<T>() where T : Entity =>
+            database.GetCollection<T>(CollectionNames[typeof(T)]);
     }
 }

@@ -1,14 +1,29 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using PawsitiveScheduling.Utility;
+using System;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API
 {
+    /// <summary>
+    /// Base class for handlers
+    /// </summary>
     public class Handler : IHandler
     {
+        private readonly ILog log;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Handler(ILog log)
+        {
+            this.log = log;
+        }
+
         /// <summary>
         /// Create an empty 200 response
         /// </summary>
@@ -36,8 +51,20 @@ namespace PawsitiveScheduling.API
         /// <summary>
         /// Create an error response with the given error message
         /// </summary>
-        protected IResult CreateResponse(HttpStatusCode statusCode, string errorMessage) =>
-            new Response(statusCode, new { Error = errorMessage });
+        protected IResult CreateResponse(HttpStatusCode statusCode, string errorMessage)
+        {
+            log.Error(errorMessage);
+            return new Response(statusCode, new { Error = errorMessage });
+        }
+
+        /// <summary>
+        /// Create an error response with the given exception
+        /// </summary>
+        protected IResult CreateResponse(HttpStatusCode statusCode, Exception ex)
+        {
+            log.Error(ex.Message);
+            return new Response(statusCode, new { Error = ex.Message, Stack = ex.StackTrace });
+        }
 
         /// <summary>
         /// Map this handler to an endpoint

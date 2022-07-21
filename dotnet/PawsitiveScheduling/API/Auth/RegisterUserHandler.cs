@@ -7,6 +7,7 @@ using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.DI;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth
@@ -24,9 +25,7 @@ namespace PawsitiveScheduling.API.Auth
         /// <summary>
         /// Constructor
         /// </summary>
-        public RegisterUserHandler(IHashingUtility hashingUtility,
-            IUserRepository userRepo,
-            ILog log)
+        public RegisterUserHandler(IHashingUtility hashingUtility, IUserRepository userRepo, ILog log) : base(log)
         {
             this.log = log;
             this.hashingUtility = hashingUtility;
@@ -43,12 +42,24 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         public async Task<IResult> Handle([FromBody] RegisterUserRequest request)
         {
-            log.Info($"Creating user {request.Username}");
+            var existingUser = await userRepo.GetUserByEmail(request.Email);
+
+            if (existingUser != null)
+            {
+                return CreateResponse(HttpStatusCode.Conflict, $"A user with the email {request.Email} already exists");
+            }
+
+            log.Info($"Creating user {request.Email}");
 
             var user = new User
             {
-                Username = request.Username
+                Email = request.Email,
             };
+
+            foreach (var role in request.Roles)
+            {
+                user.Roles.Add(role);
+            }
 
             user.Password = hashingUtility.CreateHash(request.Password);
 

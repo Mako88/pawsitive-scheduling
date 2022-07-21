@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using MongoDB.Bson;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
@@ -21,7 +20,7 @@ namespace PawsitiveScheduling.API.Dogs
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetDogHandler(IDatabaseUtility dbUtility, ILog log)
+        public GetDogHandler(IDatabaseUtility dbUtility, ILog log) : base(log)
         {
             this.dbUtility = dbUtility;
             this.log = log;
@@ -40,7 +39,7 @@ namespace PawsitiveScheduling.API.Dogs
         {
             log.Info($"Getting dog with ID {id}");
 
-            return await dbUtility.GetEntity<Dog>(ObjectId.Parse(id)).ConfigureAwait(false);
+            return await dbUtility.GetEntity<Dog>(id).ConfigureAwait(false);
         }
     }
 }

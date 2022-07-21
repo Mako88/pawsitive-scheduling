@@ -4,21 +4,19 @@ namespace PawsitiveScheduling
 {
     public static class Constants
     {
-        public static readonly string DatabaseName = "pawsitivity";
+        public const string DatabaseName = "pawsitivity";
 
-        public static readonly string BreedCollectionName = "breeds";
+        // Collection names
+        public const string BreedCollectionName = "breeds";
+        public const string DogCollectionName = "dogs";
+        public const string UserCollectionName = "users";
+        public const string AppointmentCollectionName = "appointments";
 
-        public static readonly string DogCollectionName = "dogs";
-
-        public static readonly string UserCollectionName = "users";
-
-        public static readonly string AppointmentCollectionName = "appointments";
-
-        public static readonly string BreedNameIndexName = "breedName";
-
-        public static readonly string AppointmentScheduledTimeIndexName = "appointmentScheduledTime";
-
-        public static readonly string AppointmentGroomerIdIndexName = "appointmentGroomerId";
+        // Index names
+        public const string BreedNameIndexName = "breedNameIndex";
+        public const string AppointmentScheduledTimeIndexName = "appointmentScheduledTimeIndex";
+        public const string AppointmentGroomerIdIndexName = "appointmentGroomerIdIndex";
+        public const string UserEmailIndexName = "userEmailIndex";
 
         public static readonly Guid IpAddressDeterministicNamespace = Guid.Parse("F43FA0D2-1D0E-45EF-B0DA-CD7A92A34937");
     }
