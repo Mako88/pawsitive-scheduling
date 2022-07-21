@@ -93,6 +93,8 @@ namespace PawsitiveScheduling
                 options.RedirectStatusCode = (int) HttpStatusCode.TemporaryRedirect;
                 options.HttpsPort = 5001;
             });
+
+            builder.Services.AddHttpContextAccessor();
         }
 
         /// <summary>

@@ -25,10 +25,10 @@ namespace PawsitiveScheduling.API.Appointments
         /// <summary>
         /// Constructor
         /// </summary>
-        public AddAppointmentHandler(IAppointmentRepository appointmentRepo, Func<string, ILog> logFactory)
+        public AddAppointmentHandler(IAppointmentRepository appointmentRepo, ILog log)
         {
             this.appointmentRepo = appointmentRepo;
-            log = logFactory("AddAppointment");
+            this.log = log;
         }
 
         /// <summary>

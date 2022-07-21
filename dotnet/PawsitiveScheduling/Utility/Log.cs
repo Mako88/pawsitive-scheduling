@@ -1,22 +1,30 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Http;
+using PawsitiveScheduling.Utility.DI;
+using Serilog;
 using Serilog.Events;
 using System;
+using System.Collections.Generic;
 
 namespace PawsitiveScheduling.Utility
 {
     /// <summary>
     /// Wrapper for Serilog's logging
     /// </summary>
-    public class LogWrapper : ILog
+    [Component(Singleton = true)]
+    public class LogManager : ILog
     {
-        private readonly ILogger log;
+        private readonly IHttpContextAccessor contextAccessor;
+        private readonly Dictionary<string, DateLogger> loggers = new();
+
+        private const string DayFormat = "yyyy-mm-dd";
+        private readonly string LogBasePath = $"{Environment.CurrentDirectory}\\Logs\\{{0}}";
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public LogWrapper(ILogger log)
+        public LogManager(IHttpContextAccessor contextAccessor)
         {
-            this.log = log;
+            this.contextAccessor = contextAccessor;
         }
 
         /// <summary>
@@ -26,7 +34,7 @@ namespace PawsitiveScheduling.Utility
         {
             try
             {
-                log.Information(message);
+                GetLogger().Information(message);
             }
             catch (Exception)
             {
@@ -41,7 +49,7 @@ namespace PawsitiveScheduling.Utility
         {
             try
             {
-                log.Warning(message);
+                GetLogger().Warning(message);
             }
             catch (Exception)
             {
@@ -56,7 +64,7 @@ namespace PawsitiveScheduling.Utility
         {
             try
             {
-                log.Warning(ex, message);
+                GetLogger().Warning(ex, message);
             }
             catch (Exception)
             {
@@ -71,7 +79,7 @@ namespace PawsitiveScheduling.Utility
         {
             try
             {
-                log.Error(ex, message);
+                GetLogger().Error(ex, message);
             }
             catch (Exception)
             {
@@ -86,12 +94,72 @@ namespace PawsitiveScheduling.Utility
         {
             try
             {
-                log.Write(logEvent);
+                GetLogger().Write(logEvent);
             }
             catch (Exception)
             {
 
             }
+        }
+
+        /// <summary>
+        /// Get a logger
+        /// </summary>
+        private ILogger GetLogger()
+        {
+            var path = contextAccessor.HttpContext?.Request?.Path.Value?.Replace('/', '\\');
+
+            // Use the main logger if we're not in a request context
+            if (path == null)
+            {
+                return GetOrCreateLogger("main", "log.txt");
+            }
+
+            return GetOrCreateLogger(path, $"{path}\\log.txt");
+        }
+
+        /// <summary>
+        /// Get the logger with the given key from the dictionary
+        /// or create it with the given path if it doesn't exist
+        /// </summary>
+        private ILogger GetOrCreateLogger(string key, string path)
+        {
+            var day = DateTime.Now.ToString(DayFormat);
+
+            if (loggers.TryGetValue(key, out var logger) && logger.Day == day)
+            {
+                return logger.Logger;
+            }
+
+            logger = new DateLogger
+            {
+                Day = day,
+                Logger = CreateLogger($"{string.Format(LogBasePath, day)}\\{path}"),
+            };
+
+            loggers[key] = logger;
+
+            return logger.Logger;
+        }
+
+        /// <summary>
+        /// Create a logger for the given path
+        /// </summary>
+        private static ILogger CreateLogger(string path) =>
+            new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Async(x => x.File(path, shared: true, flushToDiskInterval: TimeSpan.FromSeconds(10), rollOnFileSizeLimit: true))
+                .WriteTo.Async(x => x.Debug())
+                .CreateLogger();
+
+        /// <summary>
+        /// A class for per-day loggers
+        /// </summary>
+        private class DateLogger
+        {
+            public ILogger Logger { get; set; }
+
+            public string Day { get; set; }
         }
     }
 }

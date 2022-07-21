@@ -5,7 +5,6 @@ using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
 using PawsitivityScheduler.Data;
-using System;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Dogs
@@ -22,10 +21,10 @@ namespace PawsitiveScheduling.API.Dogs
         /// <summary>
         /// Constructor
         /// </summary>
-        public AddDogHandler(IDatabaseUtility dbUtility, Func<string, ILog> logFactory)
+        public AddDogHandler(IDatabaseUtility dbUtility, ILog log)
         {
             this.dbUtility = dbUtility;
-            log = logFactory("AddDog");
+            this.log = log;
         }
 
         /// <summary>

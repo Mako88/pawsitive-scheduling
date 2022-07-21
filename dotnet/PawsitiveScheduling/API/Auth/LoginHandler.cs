@@ -7,7 +7,6 @@ using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.DI;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -30,12 +29,12 @@ namespace PawsitiveScheduling.API.Auth
         public LoginHandler(IHashingUtility hashingUtility,
             IUserRepository userRepo,
             ITokenUtility tokenUtility,
-            Func<string, ILog> logFactory)
+            ILog log)
         {
             this.hashingUtility = hashingUtility;
             this.userRepo = userRepo;
             this.tokenUtility = tokenUtility;
-            log = logFactory("Login");
+            this.log = log;
         }
 
         /// <summary>

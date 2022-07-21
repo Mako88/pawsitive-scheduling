@@ -7,7 +7,6 @@ using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.DI;
-using System;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Auth
@@ -27,9 +26,9 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         public RegisterUserHandler(IHashingUtility hashingUtility,
             IUserRepository userRepo,
-            Func<string, ILog> logFactory)
+            ILog log)
         {
-            log = logFactory("RegisterUser");
+            this.log = log;
             this.hashingUtility = hashingUtility;
             this.userRepo = userRepo;
         }

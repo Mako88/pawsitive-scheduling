@@ -9,7 +9,6 @@ using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.DI;
-using System;
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -32,11 +31,11 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         public RefreshTokenHandler(IUserRepository userRepo,
             ITokenUtility tokenUtility,
-            Func<string, ILog> logFactory)
+            ILog log)
         {
             this.userRepo = userRepo;
             this.tokenUtility = tokenUtility;
-            log = logFactory("RefreshToken");
+            this.log = log;
         }
 
         /// <summary>
