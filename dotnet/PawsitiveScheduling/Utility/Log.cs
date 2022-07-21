@@ -11,12 +11,12 @@ namespace PawsitiveScheduling.Utility
     /// Wrapper for Serilog's logging
     /// </summary>
     [Component(Singleton = true)]
-    public class LogManager : ILog
+    public class LogManager : ILog, ILogger
     {
         private readonly IHttpContextAccessor contextAccessor;
         private readonly Dictionary<string, DateLogger> loggers = new();
 
-        private const string DayFormat = "yyyy-mm-dd";
+        private const string DayFormat = "yyyy-MM-dd";
         private readonly string LogBasePath = $"{Environment.CurrentDirectory}\\Logs\\{{0}}";
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace PawsitiveScheduling.Utility
         /// </summary>
         private ILogger GetLogger()
         {
-            var path = contextAccessor.HttpContext?.Request?.Path.Value?.Replace('/', '\\');
+            var path = contextAccessor?.HttpContext?.Request?.Path.Value?.Replace('/', '\\');
 
             // Use the main logger if we're not in a request context
             if (path == null)
@@ -148,6 +148,7 @@ namespace PawsitiveScheduling.Utility
         private static ILogger CreateLogger(string path) =>
             new LoggerConfiguration()
                 .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .WriteTo.Async(x => x.File(path, shared: true, flushToDiskInterval: TimeSpan.FromSeconds(10), rollOnFileSizeLimit: true))
                 .WriteTo.Async(x => x.Debug())
                 .CreateLogger();

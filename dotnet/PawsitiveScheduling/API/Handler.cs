@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -82,14 +81,7 @@ namespace PawsitiveScheduling.API
 
                 if (Body != null)
                 {
-                    var json = JsonConvert.SerializeObject(Body, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        ContractResolver = new DefaultContractResolver
-                        {
-                            NamingStrategy = new CamelCaseNamingStrategy(),
-                        }
-                    });
+                    var json = JsonConvert.SerializeObject(Body);
 
                     await context.Response.WriteAsync(json);
                 }
