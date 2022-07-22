@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
-using PawsitiveScheduling.Repositories;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace PawsitiveScheduling.API.Auth
     public class LoginHandler : Handler
     {
         private readonly IHashingUtility hashingUtility;
-        private readonly IUserRepository userRepo;
+        private readonly IDatabaseUtility dbUtility;
         private readonly ITokenUtility tokenUtility;
         private readonly ILog log;
 
@@ -27,12 +27,12 @@ namespace PawsitiveScheduling.API.Auth
         /// Constructor
         /// </summary>
         public LoginHandler(IHashingUtility hashingUtility,
-            IUserRepository userRepo,
+            IDatabaseUtility dbUtility,
             ITokenUtility tokenUtility,
             ILog log) : base(log)
         {
             this.hashingUtility = hashingUtility;
-            this.userRepo = userRepo;
+            this.dbUtility = dbUtility;
             this.tokenUtility = tokenUtility;
             this.log = log;
         }
@@ -50,7 +50,7 @@ namespace PawsitiveScheduling.API.Auth
         {
             log.Info($"Authenticating {request.Email}");
 
-            var user = await userRepo.GetUserByEmail(request.Email);
+            var user = await dbUtility.GetUserByEmail(request.Email);
 
             if (user == null)
             {

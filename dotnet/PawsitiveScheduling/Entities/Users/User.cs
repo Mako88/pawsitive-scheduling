@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PawsitiveScheduling.Entities
+namespace PawsitiveScheduling.Entities.Users
 {
     /// <summary>
     /// The user entity
@@ -16,7 +16,7 @@ namespace PawsitiveScheduling.Entities
 
         public HashInfo Password { get; set; } = new();
 
-        public List<string> Roles { get; set; } = new();
+        public string Role { get; set; }
 
         public Dictionary<string, string> RefreshTokens { get; set; } = new();
     }

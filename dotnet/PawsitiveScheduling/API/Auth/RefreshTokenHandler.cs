@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Repositories;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using System.Net;
 using System.Security.Authentication;
@@ -21,16 +21,16 @@ namespace PawsitiveScheduling.API.Auth
     [Component]
     public class RefreshTokenHandler : Handler
     {
-        private readonly IUserRepository userRepo;
+        private readonly IDatabaseUtility dbUtility;
         private readonly ITokenUtility tokenUtility;
         private readonly ILog log;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RefreshTokenHandler(IUserRepository userRepo, ITokenUtility tokenUtility, ILog log) : base(log)
+        public RefreshTokenHandler(IDatabaseUtility dbUtility, ITokenUtility tokenUtility, ILog log) : base(log)
         {
-            this.userRepo = userRepo;
+            this.dbUtility = dbUtility;
             this.tokenUtility = tokenUtility;
             this.log = log;
         }
@@ -60,7 +60,7 @@ namespace PawsitiveScheduling.API.Auth
                 return CreateResponse(HttpStatusCode.Forbidden, "Sid claim missing from token");
             }
 
-            var user = await userRepo.GetEntity<User>(userId);
+            var user = await dbUtility.GetEntity<User>(userId);
 
             if (user == null)
             {

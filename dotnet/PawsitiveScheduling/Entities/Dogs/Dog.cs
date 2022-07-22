@@ -3,10 +3,10 @@ using PawsitiveScheduling;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility.Attributes;
 using PawsitiveScheduling.Utility.Extensions;
-using PawsitivityScheduler.Data.Breeds;
+using PawsitivityScheduler.Entities.Dogs.Breeds;
 using System;
 
-namespace PawsitivityScheduler.Data
+namespace PawsitivityScheduler.Entities.Dogs
 {
     /// <summary>
     /// The dog entity

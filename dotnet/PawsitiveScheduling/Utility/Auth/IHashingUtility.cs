@@ -1,4 +1,4 @@
-﻿using PawsitiveScheduling.Entities;
+﻿using PawsitiveScheduling.Entities.Users;
 
 namespace PawsitiveScheduling.Utility.Auth
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace PawsitivityScheduler.Data.Breeds
+namespace PawsitivityScheduler.Entities.Dogs.Breeds
 {
     public enum Size
     {

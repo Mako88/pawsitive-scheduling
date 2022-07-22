@@ -1,4 +1,4 @@
-﻿using PawsitiveScheduling.Entities;
+﻿using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility.Auth.DTO;
 using System.Security.Claims;
 using System.Threading.Tasks;

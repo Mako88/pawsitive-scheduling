@@ -1,14 +1,13 @@
 ﻿using MongoDB.Driver;
-using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Entities.Users;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Repositories
+namespace PawsitiveScheduling.Utility.Database
 {
     /// <summary>
-    /// Repo for Users
+    /// User-related database methods
     /// </summary>
-    public class UserRepository : DatabaseUtility, IUserRepository
+    public partial class DatabaseUtility : IDatabaseUtility
     {
         /// <summary>
         /// Get a user by email

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
-using PawsitivityScheduler.Data;
+using PawsitivityScheduler.Entities.Dogs;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Dogs

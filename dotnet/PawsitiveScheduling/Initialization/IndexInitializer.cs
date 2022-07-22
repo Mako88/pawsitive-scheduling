@@ -1,7 +1,8 @@
 ﻿using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Entities.Users;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
-using PawsitivityScheduler.Data.Breeds;
+using PawsitivityScheduler.Entities.Dogs.Breeds;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.Initialization

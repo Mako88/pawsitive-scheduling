@@ -1,7 +1,8 @@
 ﻿using Be.Vlaanderen.Basisregisters.Generators.Guid;
 using Microsoft.IdentityModel.Tokens;
-using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility.Auth.DTO;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using PawsitiveScheduling.Utility.Extensions;
 using System;
@@ -42,20 +43,14 @@ namespace PawsitiveScheduling.Utility.Auth
 
             var signingCreds = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Sid, user.Id),
-                new Claim(ClaimTypes.Name, user.Email),
-            };
-
-            foreach (var role in user.Roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
+                Subject = new ClaimsIdentity(new List<Claim>
+                {
+                    new Claim(ClaimTypes.Sid, user.Id),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role),
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = signingCreds,
                 Audience = EnvironmentVariables.JwtAudience,
@@ -65,7 +60,7 @@ namespace PawsitiveScheduling.Utility.Auth
 
             var refreshToken = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Sid, user.Id),
                 }),

@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
-using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Repositories;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
-using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.DI;
+using System;
+using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -18,18 +18,16 @@ namespace PawsitiveScheduling.API.Auth
     [Component]
     public class RegisterUserHandler : Handler
     {
-        private readonly IHashingUtility hashingUtility;
-        private readonly IUserRepository userRepo;
+        private readonly IUserUtility userUtility;
         private readonly ILog log;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RegisterUserHandler(IHashingUtility hashingUtility, IUserRepository userRepo, ILog log) : base(log)
+        public RegisterUserHandler(IUserUtility userUtility, ILog log) : base(log)
         {
+            this.userUtility = userUtility;
             this.log = log;
-            this.hashingUtility = hashingUtility;
-            this.userRepo = userRepo;
         }
 
         /// <summary>
@@ -42,32 +40,19 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         public async Task<IResult> Handle([FromBody] RegisterUserRequest request)
         {
-            var existingUser = await userRepo.GetUserByEmail(request.Email);
-
-            if (existingUser != null)
+            try
             {
-                return CreateResponse(HttpStatusCode.Conflict, $"A user with the email {request.Email} already exists");
+                var user = await userUtility.CreateUser(request);
+                return CreateResponse(new { Id = user.Id });
             }
-
-            log.Info($"Creating user {request.Email}");
-
-            var user = new User
+            catch (DuplicateNameException ex)
             {
-                Email = request.Email,
-            };
-
-            foreach (var role in request.Roles)
-            {
-                user.Roles.Add(role);
+                return CreateResponse(HttpStatusCode.Conflict, ex.Message);
             }
-
-            user.Password = hashingUtility.CreateHash(request.Password);
-
-            user = await userRepo.AddEntity(user);
-
-            log.Info("User saved");
-
-            return CreateResponse(new { Id = user.Id });
+            catch (ArgumentException ex)
+            {
+                return CreateResponse(HttpStatusCode.UnprocessableEntity, ex.Message);
+            }
         }
     }
 }

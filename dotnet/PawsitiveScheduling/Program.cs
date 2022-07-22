@@ -14,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 using PawsitiveScheduling.API;
 using PawsitiveScheduling.Initialization;
 using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using Serilog;
 using System;
@@ -172,6 +173,13 @@ namespace PawsitiveScheduling
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
                     var exceptionInfo = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    using (var scope = IoC.BeginLifetimeScope())
+                    {
+                        var log = scope.Resolve<ILog>();
+
+                        log.Error($"Caught unhandled exception: {exceptionInfo.Error.Message}", exceptionInfo.Error);
+                    }
 
                     var body = new
                     {

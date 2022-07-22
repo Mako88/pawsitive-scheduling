@@ -1,5 +1,5 @@
 ﻿using Konscious.Security.Cryptography;
-using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility.DI;
 using System;
 using System.Linq;

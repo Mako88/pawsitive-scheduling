@@ -1,11 +1,12 @@
 ﻿using MongoDB.Driver;
 using PawsitiveScheduling.Entities;
+using PawsitiveScheduling.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Utility
+namespace PawsitiveScheduling.Utility.Database
 {
     /// <summary>
     /// Utility for interacting with the database
@@ -18,14 +19,9 @@ namespace PawsitiveScheduling.Utility
         Task<T> GetEntity<T>(string id) where T : Entity;
 
         /// <summary>
-        /// Get entities using a filter expression
+        /// Get entities, optionally filtering and sorting them
         /// </summary>
-        Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity;
-
-        /// <summary>
-        /// Get all entities in a collection
-        /// </summary>
-        Task<IEnumerable<T>> GetAllEntities<T>() where T : Entity;
+        Task<List<T>> GetEntities<T>(Expression<Func<T, bool>> filter = null, Expression<Func<T, object>> sortBy = null) where T : Entity;
 
         /// <summary>
         /// Add an entity
@@ -48,8 +44,23 @@ namespace PawsitiveScheduling.Utility
         Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity;
 
         /// <summary>
+        /// Gets the tracker
+        /// </summary>
+        Task<Tracker> GetTracker();
+
+        /// <summary>
         /// Create an index
         /// </summary>
         Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity;
+
+        /// <summary>
+        /// Get all appointments that intersect the given start and end dates
+        /// </summary>
+        Task<IEnumerable<Appointment>> GetAppointments(DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// Get a user by email
+        /// </summary>
+        Task<User> GetUserByEmail(string email);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
-using PawsitivityScheduler.Data.Breeds;
+using PawsitivityScheduler.Entities.Dogs.Breeds;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace PawsitiveScheduling.Initialization
         public async Task Initialize()
         {
             // Add default breed information if it hasn't already been added
-            var existingBreeds = await dbUtility.GetAllEntities<Breed>().ConfigureAwait(false);
+            var existingBreeds = await dbUtility.GetEntities<Breed>().ConfigureAwait(false);
             if (existingBreeds.Count() != Enum.GetNames(typeof(BreedName)).Length)
             {
                 await dbUtility.AddEntity(

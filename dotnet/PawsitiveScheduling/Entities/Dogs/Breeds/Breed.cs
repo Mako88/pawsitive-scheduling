@@ -2,7 +2,7 @@
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Utility.Attributes;
 
-namespace PawsitivityScheduler.Data.Breeds
+namespace PawsitivityScheduler.Entities.Dogs.Breeds
 {
     [BsonCollectionName(Constants.BreedCollectionName)]
     public class Breed : Entity

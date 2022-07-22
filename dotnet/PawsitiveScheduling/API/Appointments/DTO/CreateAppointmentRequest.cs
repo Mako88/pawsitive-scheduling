@@ -9,5 +9,7 @@ namespace PawsitiveScheduling.API.Appointments.DTO
         public int Duration { get; set; }
 
         public string GroomerId { get; set; }
+
+        public bool AutoAssigned { get; set; }
     }
 }

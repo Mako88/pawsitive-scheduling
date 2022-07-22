@@ -9,13 +9,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Utility
+namespace PawsitiveScheduling.Utility.Database
 {
     /// <summary>
     /// Utility for interacting with the database
     /// </summary>
     [Component(Singleton = true)]
-    public class DatabaseUtility : IDatabaseUtility
+    public partial class DatabaseUtility : IDatabaseUtility
     {
         private readonly IMongoDatabase database;
 
@@ -37,16 +37,24 @@ namespace PawsitiveScheduling.Utility
             await GetCollection<T>().Find(x => x.Id == id).SingleOrDefaultAsync().ConfigureAwait(false);
 
         /// <summary>
-        /// Get entities using a filter expression
+        /// Get entities, optionally filtering and sorting them
         /// </summary>
-        public async Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> filter) where T : Entity =>
-            await GetCollection<T>().Find(filter).ToListAsync();
+        public async Task<List<T>> GetEntities<T>(Expression<Func<T, bool>> filter = null, Expression<Func<T, object>> sortBy = null) where T : Entity
+        {
+            if (filter == null)
+            {
+                filter = _ => true;
+            }
 
-        /// <summary>
-        /// Get all entities in a collection
-        /// </summary>
-        public async Task<IEnumerable<T>> GetAllEntities<T>() where T : Entity =>
-            await GetCollection<T>().Find(_ => true).ToListAsync();
+            var finder = GetCollection<T>().Find(filter);
+
+            if (sortBy != null)
+            {
+                finder = finder.SortBy(sortBy);
+            }
+
+            return await finder.ToListAsync();
+        }
 
         /// <summary>
         /// Add an entity
@@ -89,6 +97,11 @@ namespace PawsitiveScheduling.Utility
 
             return entity;
         }
+
+        /// <summary>
+        /// Gets the tracker
+        /// </summary>
+        public async Task<Tracker> GetTracker() => (await GetEntities<Tracker>()).SingleOrDefault();
 
         /// <summary>
         /// Perform initialization

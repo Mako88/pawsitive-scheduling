@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace PawsitiveScheduling.API.Auth.DTO
+﻿namespace PawsitiveScheduling.API.Auth.DTO
 {
     public class RegisterUserRequest
     {
@@ -8,6 +6,6 @@ namespace PawsitiveScheduling.API.Auth.DTO
 
         public string Password { get; set; }
 
-        public List<string> Roles { get; set; }
+        public string Role { get; set; }
     }
 }

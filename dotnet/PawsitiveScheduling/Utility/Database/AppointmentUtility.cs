@@ -1,16 +1,15 @@
 ﻿using Itenso.TimePeriod;
 using PawsitiveScheduling.Entities;
-using PawsitiveScheduling.Utility;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Repositories
+namespace PawsitiveScheduling.Utility.Database
 {
     /// <summary>
-    /// Repo for appointments
+    /// Appointment-related database methods
     /// </summary>
-    public class AppointmentRepository : DatabaseUtility, IAppointmentRepository
+    public partial class DatabaseUtility : IDatabaseUtility
     {
         /// <summary>
         /// Get all appointments that intersect the given start and end dates
