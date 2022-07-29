@@ -34,7 +34,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// Get an entity by ID
         /// </summary>
         public async Task<T> GetEntity<T>(string id) where T : Entity =>
-            await GetCollection<T>().Find(x => x.Id == id).SingleOrDefaultAsync().ConfigureAwait(false);
+            await GetCollection<T>().Find(x => x.Id == id).SingleOrDefaultAsync();
 
         /// <summary>
         /// Get entities, optionally filtering and sorting them
@@ -63,7 +63,7 @@ namespace PawsitiveScheduling.Utility.Database
         {
             var collection = GetCollection<T>();
 
-            await collection.InsertOneAsync(entity).ConfigureAwait(false);
+            await collection.InsertOneAsync(entity);
 
             return entity;
         }
@@ -75,7 +75,7 @@ namespace PawsitiveScheduling.Utility.Database
         {
             var collection = GetCollection<T>();
 
-            await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity).ConfigureAwait(false);
+            await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
 
             return entity;
         }
@@ -84,16 +84,16 @@ namespace PawsitiveScheduling.Utility.Database
         /// Delete an entity
         /// </summary>
         public async Task<DeleteResult> DeleteEntity<T>(string id) where T : Entity =>
-            await GetCollection<T>().DeleteOneAsync(x => x.Id == id).ConfigureAwait(false);
+            await GetCollection<T>().DeleteOneAsync(x => x.Id == id);
 
         /// <summary>
         /// Delete an entity, returning it
         /// </summary>
         public async Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity
         {
-            var entity = await GetEntity<T>(id).ConfigureAwait(false);
+            var entity = await GetEntity<T>(id);
 
-            await DeleteEntity<T>(id).ConfigureAwait(false);
+            await DeleteEntity<T>(id);
 
             return entity;
         }
@@ -133,7 +133,7 @@ namespace PawsitiveScheduling.Utility.Database
 
             return await collection.Indexes
                 .CreateOneAsync(new CreateIndexModel<T>(index, new CreateIndexOptions { Unique = true, Name = name }))
-                .ConfigureAwait(false);
+                ;
         }
 
         /// <summary>

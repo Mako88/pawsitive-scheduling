@@ -3,8 +3,6 @@ using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -40,11 +38,6 @@ namespace PawsitiveScheduling.Entities.Users
             if (existingUser != null)
             {
                 throw new DuplicateNameException($"A user with the email '{request.Email}' already exists");
-            }
-
-            if (!new EmailAddressAttribute().IsValid(request.Email))
-            {
-                throw new ArgumentException($"The email address '{request.Email}' is invalid");
             }
 
             log.Info($"Creating user '{request.Email}'");

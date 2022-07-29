@@ -40,6 +40,11 @@ namespace PawsitiveScheduling.API.Auth
         /// </summary>
         public async Task<IResult> Handle([FromBody] RegisterUserRequest request)
         {
+            if (!ValidateRequest(request, out var response))
+            {
+                return response;
+            }
+
             try
             {
                 var user = await userUtility.CreateUser(request);

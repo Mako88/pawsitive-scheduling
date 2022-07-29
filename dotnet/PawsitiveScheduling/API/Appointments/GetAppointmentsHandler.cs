@@ -35,7 +35,7 @@ namespace PawsitiveScheduling.API.Appointments
         /// <summary>
         /// Map this handler to an endpoint
         /// </summary>
-        public override void MapEndpoint(WebApplication app) => app.MapGet("api/appointments/get", Handle);
+        public override void MapEndpoint(WebApplication app) => app.MapGet("api/appointments", Handle);
 
         /// <summary>
         /// Handle the request

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using PawsitivityScheduler.Entities.Dogs;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API.Dogs
@@ -36,11 +38,18 @@ namespace PawsitiveScheduling.API.Dogs
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist}")]
-        public async Task<Dog> Handle(string id)
+        public async Task<IResult> Handle(string id)
         {
             log.Info($"Getting dog with ID {id}");
 
-            return await dbUtility.GetEntity<Dog>(id).ConfigureAwait(false);
+            var dog = await dbUtility.GetEntity<Dog>(id);
+
+            if (dog == null)
+            {
+                return CreateResponse(HttpStatusCode.NotFound, "Invalid dogId");
+            }
+
+            return CreateResponse(dog);
         }
     }
 }

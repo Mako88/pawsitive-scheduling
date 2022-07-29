@@ -77,7 +77,7 @@ namespace PawsitiveScheduling.Utility.Auth
 
             user.RefreshTokens[ipHash.ToString()] = refreshTokenString;
 
-            await dbUtililty.UpdateEntity(user).ConfigureAwait(false);
+            await dbUtililty.UpdateEntity(user);
 
             return new TokenResponse
             {

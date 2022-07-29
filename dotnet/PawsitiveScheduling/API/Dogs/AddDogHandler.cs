@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
@@ -31,21 +32,21 @@ namespace PawsitiveScheduling.API.Dogs
         /// <summary>
         /// Map this handler to an endpoint
         /// </summary>
-        public override void MapEndpoint(WebApplication app) => app.MapPost("api/dogs/add", Handle);
+        public override void MapEndpoint(WebApplication app) => app.MapPost("api/dogs", Handle);
 
         /// <summary>
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist}")]
-        public async Task<string> Handle([FromBody] Dog dog)
+        public async Task<IResult> Handle([FromBody] Dog dog)
         {
             log.Info("Adding dog");
 
-            var savedDog = await dbUtility.AddEntity(dog).ConfigureAwait(false);
+            var savedDog = await dbUtility.AddEntity(dog);
 
             log.Info($"Saved {savedDog.Id}");
 
-            return savedDog.Id;
+            return CreateResponse(new { Id = savedDog.Id });
         }
     }
 }

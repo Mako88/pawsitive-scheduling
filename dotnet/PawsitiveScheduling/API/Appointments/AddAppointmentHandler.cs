@@ -35,14 +35,19 @@ namespace PawsitiveScheduling.API.Appointments
         /// <summary>
         /// Map this handler to an endpoint
         /// </summary>
-        public override void MapEndpoint(WebApplication app) => app.MapPost("api/appointments/add", Handle);
+        public override void MapEndpoint(WebApplication app) => app.MapPost("api/appointments", Handle);
 
         /// <summary>
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer},{UserRoles.Customer}")]
-        public async Task<IResult> Handle([FromBody] CreateAppointmentRequest request)
+        public async Task<IResult> Handle([FromBody] AddAppointmentRequest request)
         {
+            if (!ValidateRequest(request, out var response))
+            {
+                return response;
+            }
+
             log.Info($"Creating new appointment for GroomerId '{request.GroomerId}' starting on '{request.StartDate}' and lasting '{request.Duration}' minutes");
 
             var scheduledTime = new TimeBlock(request.StartDate, TimeSpan.FromMinutes(request.Duration));
@@ -53,7 +58,7 @@ namespace PawsitiveScheduling.API.Appointments
                 ScheduledTime = scheduledTime,
             };
 
-            var savedAppointment = await dbUtility.AddEntity(appointment).ConfigureAwait(false);
+            var savedAppointment = await dbUtility.AddEntity(appointment);
 
             if (request.AutoAssigned)
             {

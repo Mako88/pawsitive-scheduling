@@ -13,6 +13,6 @@ namespace PawsitiveScheduling.Utility.Database
         /// Get a user by email
         /// </summary>
         public async Task<User> GetUserByEmail(string email) =>
-            await GetCollection<User>().Find(x => x.Email == email).SingleOrDefaultAsync().ConfigureAwait(false);
+            await GetCollection<User>().Find(x => x.Email == email).SingleOrDefaultAsync();
     }
 }

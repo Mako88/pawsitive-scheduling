@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Entities.Users;
+using PawsitivityScheduler.Entities.Dogs.Breeds;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -62,5 +63,10 @@ namespace PawsitiveScheduling.Utility.Database
         /// Get a user by email
         /// </summary>
         Task<User> GetUserByEmail(string email);
+
+        /// <summary>
+        /// Get a breed by name
+        /// </summary>
+        Task<Breed> GetBreedByName(BreedName name);
     }
 }

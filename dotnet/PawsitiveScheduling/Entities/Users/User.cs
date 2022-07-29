@@ -1,6 +1,5 @@
 ﻿using PawsitiveScheduling.Utility.Attributes;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace PawsitiveScheduling.Entities.Users
 {
@@ -10,8 +9,6 @@ namespace PawsitiveScheduling.Entities.Users
     [BsonCollectionName(Constants.UserCollectionName)]
     public class User : Entity
     {
-        [Required(ErrorMessage = "The email address is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
 
         public HashInfo Password { get; set; } = new();

@@ -30,12 +30,12 @@ namespace PawsitiveScheduling.Initialization
         public async Task Initialize()
         {
             // Add default breed information if it hasn't already been added
-            var existingBreeds = await dbUtility.GetEntities<Breed>().ConfigureAwait(false);
+            var existingBreeds = await dbUtility.GetEntities<Breed>();
             if (existingBreeds.Count() != Enum.GetNames(typeof(BreedName)).Length)
             {
                 await dbUtility.AddEntity(
                     new Breed { Name = BreedName.Affenpinscher, Group = Group.ToyBreeds, Size = Size.Medium, BathMinutes = 15, GroomMinutes = 15 }
-                ).ConfigureAwait(false);
+                );
             }
         }
     }

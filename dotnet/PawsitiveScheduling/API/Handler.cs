@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using PawsitiveScheduling.API.DTO;
 using PawsitiveScheduling.Utility;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
-using System.Net.Mime;
-using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API
 {
     /// <summary>
     /// Base class for handlers
     /// </summary>
-    public class Handler : IHandler
+    public abstract class Handler : IHandler
     {
         private readonly ILog log;
 
@@ -54,7 +55,7 @@ namespace PawsitiveScheduling.API
         protected IResult CreateResponse(HttpStatusCode statusCode, string errorMessage)
         {
             log.Error(errorMessage);
-            return new Response(statusCode, new { Error = errorMessage });
+            return new Response(statusCode, new ErrorResponse { Error = errorMessage });
         }
 
         /// <summary>
@@ -63,56 +64,64 @@ namespace PawsitiveScheduling.API
         protected IResult CreateResponse(HttpStatusCode statusCode, Exception ex)
         {
             log.Error(ex.Message);
-            return new Response(statusCode, new { Error = ex.Message, Stack = ex.StackTrace });
+            return new Response(statusCode, new ErrorResponse { Error = ex.Message, Stack = ex.StackTrace });
+        }
+
+        /// <summary>
+        /// Create an error response with the given error messages
+        /// </summary>
+        protected IResult CreateResponse(HttpStatusCode statusCode, string errorMessage, List<string> errors)
+        {
+            log.Error($"{errorMessage}:\n{string.Join("\n", errors)}");
+            return new Response(statusCode, new ErrorResponse { Error = errorMessage, Errors = errors });
+        }
+
+        /// <summary>
+        /// Validate a request
+        /// </summary>
+        protected bool ValidateRequest(object request, out IResult response)
+        {
+            var errors = new List<string>();
+
+            foreach (var property in request.GetType().GetProperties())
+            {
+                foreach (var attribute in property.GetCustomAttributes(typeof(ValidationAttribute), true))
+                {
+                    var propertyValue = property.CanRead ? property.GetValue(request) : null;
+
+                    var validationAttribute = attribute as ValidationAttribute;
+
+                    if (!validationAttribute.IsValid(propertyValue))
+                    {
+                        errors.Add(validationAttribute.FormatErrorMessage(property.Name));
+                    }
+
+                    var requiredAttribute = attribute as RequiredAttribute;
+
+                    // Add an error for value types that are their default value but are required
+                    if (requiredAttribute != null && property.PropertyType.IsValueType && propertyValue != null)
+                    {
+                        if (Activator.CreateInstance(propertyValue.GetType()).Equals(propertyValue))
+                        {
+                            errors.Add(validationAttribute.FormatErrorMessage(property.Name));
+                        }
+                    }
+                }
+            }
+
+            if (errors.Any())
+            {
+                response = CreateResponse(HttpStatusCode.BadRequest, "Some validation errors occurred", errors);
+                return false;
+            }
+
+            response = null;
+            return true;
         }
 
         /// <summary>
         /// Map this handler to an endpoint
         /// </summary>
-        public virtual void MapEndpoint(WebApplication app) => throw new System.NotImplementedException("MapEndpoint() was called on the base Handler class");
-
-        /// <summary>
-        /// An implementation of IResult to return responses
-        /// </summary>
-        private class Response : IResult
-        {
-            public object Body { get; set; }
-
-            public HttpStatusCode? StatusCode { get; set; }
-
-            public Response()
-            {
-
-            }
-
-            public Response(object body)
-            {
-                Body = body;
-            }
-
-            public Response(HttpStatusCode statusCode)
-            {
-                StatusCode = statusCode;
-            }
-
-            public Response(HttpStatusCode statusCode, object body)
-            {
-                Body = body;
-                StatusCode = statusCode;
-            }
-
-            public async Task ExecuteAsync(HttpContext context)
-            {
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                context.Response.StatusCode = (int) (StatusCode == null ? HttpStatusCode.OK : StatusCode.Value);
-
-                if (Body != null)
-                {
-                    var json = JsonConvert.SerializeObject(Body);
-
-                    await context.Response.WriteAsync(json);
-                }
-            }
-        }
+        public abstract void MapEndpoint(WebApplication app);
     }
 }
