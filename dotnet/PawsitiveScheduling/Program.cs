@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PawsitiveScheduling.API;
+using PawsitiveScheduling.API.DTO;
 using PawsitiveScheduling.Initialization;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Database;
@@ -181,7 +182,7 @@ namespace PawsitiveScheduling
                         log.Error($"Caught unhandled exception: {exceptionInfo.Error.Message}", exceptionInfo.Error);
                     }
 
-                    var body = new
+                    var body = new ErrorResponse
                     {
                         Error = exceptionInfo.Error.Message,
                         Stack = exceptionInfo.Error.StackTrace,

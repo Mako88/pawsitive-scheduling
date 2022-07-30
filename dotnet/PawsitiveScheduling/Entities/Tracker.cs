@@ -8,6 +8,8 @@ namespace PawsitiveScheduling.Entities
     [BsonCollectionName("Tracker")]
     public class Tracker : Entity
     {
+        public override string Id => "tracker";
+
         public string LastAutoAssignedGroomerId { get; set; }
     }
 }
