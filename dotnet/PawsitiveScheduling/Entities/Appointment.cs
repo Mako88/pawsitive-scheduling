@@ -9,8 +9,8 @@ namespace PawsitiveScheduling.Entities
     [BsonCollectionName(Constants.AppointmentCollectionName)]
     public class Appointment : Entity
     {
-        public ITimePeriod ScheduledTime { get; set; }
+        public ITimePeriod ScheduledTime { get; set; } = null!;
 
-        public string GroomerId { get; set; }
+        public string GroomerId { get; set; } = null!;
     }
 }

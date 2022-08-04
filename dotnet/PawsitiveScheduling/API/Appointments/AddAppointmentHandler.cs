@@ -45,7 +45,7 @@ namespace PawsitiveScheduling.API.Appointments
         {
             if (!ValidateRequest(request, out var response))
             {
-                return response;
+                return response!;
             }
 
             log.Info($"Creating new appointment for GroomerId '{request.GroomerId}' starting on '{request.StartDate}' and lasting '{request.Duration}' minutes");
@@ -54,7 +54,7 @@ namespace PawsitiveScheduling.API.Appointments
 
             var appointment = new Appointment
             {
-                GroomerId = request.GroomerId,
+                GroomerId = request.GroomerId!,
                 ScheduledTime = scheduledTime,
             };
 

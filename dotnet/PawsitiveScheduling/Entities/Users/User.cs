@@ -9,20 +9,20 @@ namespace PawsitiveScheduling.Entities.Users
     [BsonCollectionName(Constants.UserCollectionName)]
     public class User : Entity
     {
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         public HashInfo Password { get; set; } = new();
 
-        public string Role { get; set; }
+        public string Role { get; set; } = null!;
 
         public Dictionary<string, string> RefreshTokens { get; set; } = new();
     }
 
     public class HashInfo
     {
-        public byte[] HashedText { get; set; }
+        public byte[] HashedText { get; set; } = null!;
 
-        public byte[] Salt { get; set; }
+        public byte[] Salt { get; set; } = null!;
 
         public int DegreeOfParallelism { get; set; }
 

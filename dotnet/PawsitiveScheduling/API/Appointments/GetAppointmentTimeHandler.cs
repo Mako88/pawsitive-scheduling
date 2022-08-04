@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using PawsitiveScheduling.API.Appointments.DTO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
@@ -39,11 +39,16 @@ namespace PawsitiveScheduling.API.Appointments
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer},{UserRoles.Customer}")]
-        public async Task<IResult> Handle([FromQuery] string dogId, [FromQuery] List<string> serviceIds, [FromQuery] bool bathOnly, [FromQuery] string groomerId)
+        public async Task<IResult> Handle(GetAppointmentTimeRequest request)
         {
-            log.Info($"Getting appointment time for groomer {groomerId}, dog {dogId}, with services: {string.Join(", ", serviceIds)} and bathOnly: {bathOnly}");
+            if (!ValidateRequest(request, out var response))
+            {
+                return response!;
+            }
 
-            var groomer = await dbUtility.GetEntity<Groomer>(groomerId);
+            log.Info($"Getting appointment time for groomer {request.GroomerId}, dog {request.DogId}, with services: {string.Join(", ", request.ServiceIds)} and bathOnly: {request.BathOnly}");
+
+            var groomer = await dbUtility.GetEntity<Groomer>(request.GroomerId);
 
             if (groomer == null)
             {
@@ -52,7 +57,7 @@ namespace PawsitiveScheduling.API.Appointments
 
             var services = new List<Service>();
 
-            foreach (var serviceId in serviceIds)
+            foreach (var serviceId in request.ServiceIds)
             {
                 var service = await dbUtility.GetEntity<Service>(serviceId);
 
@@ -64,7 +69,7 @@ namespace PawsitiveScheduling.API.Appointments
                 services.Add(service);
             }
 
-            var dog = await dbUtility.GetEntity<Dog>(dogId);
+            var dog = await dbUtility.GetEntity<Dog>(request.DogId);
 
             if (dog == null)
             {
@@ -80,7 +85,7 @@ namespace PawsitiveScheduling.API.Appointments
 
             var time = breed.BathMinutes + dog.AdditionalBathMinutes;
 
-            if (!bathOnly)
+            if (!request.BathOnly)
             {
                 time += breed.GroomMinutes + dog.AdditionalGroomMinutes;
             }
@@ -97,7 +102,7 @@ namespace PawsitiveScheduling.API.Appointments
                 }
             }
 
-            log.Info($"Caluclated time: {time}");
+            log.Info($"Calculated time: {time}");
 
             return CreateResponse(new { Time = time });
         }

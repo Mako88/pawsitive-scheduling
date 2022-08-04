@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 
 namespace PawsitiveScheduling.Utility.Extensions
 {
@@ -9,9 +8,9 @@ namespace PawsitiveScheduling.Utility.Extensions
     {
         public static string GetDescription(this Enum value)
         {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
+            var fi = value.GetType().GetField(value.ToString());
 
-            DescriptionAttribute[] attributes = (DescriptionAttribute[]) fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attributes = (DescriptionAttribute[]) (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) ?? new DescriptionAttribute[0]);
 
             return attributes.FirstOrDefault()?.Description ?? value.ToString();
         }

@@ -1,7 +1,8 @@
 ﻿using PawsitiveScheduling.API.Auth.DTO;
+using PawsitiveScheduling.Entities.Users;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Entities.Users
+namespace PawsitiveScheduling.Utility.Entities
 {
     /// <summary>
     /// Utility for managing users

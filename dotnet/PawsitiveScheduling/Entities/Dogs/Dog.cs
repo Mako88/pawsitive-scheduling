@@ -14,7 +14,7 @@ namespace PawsitivityScheduler.Entities.Dogs
     [BsonCollectionName(Constants.DogCollectionName)]
     public class Dog : Entity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         public BreedName Breed { get; set; }
 
@@ -42,10 +42,7 @@ namespace PawsitivityScheduler.Entities.Dogs
 
                 return age;
             }
-            set
-            {
-                BirthDate = DateTime.Today.AddYears(-value);
-            }
+            set => BirthDate = DateTime.Today.AddYears(-value);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
@@ -46,11 +45,16 @@ namespace PawsitiveScheduling.API.Auth
         /// Login
         /// </summary>
         [AllowAnonymous]
-        public async Task<IResult> Handle([FromBody] LoginRequest request, HttpContext context)
+        public async Task<IResult> Handle(LoginRequest request, HttpContext context)
         {
+            if (!ValidateRequest(request, out var response))
+            {
+                return response!;
+            }
+
             log.Info($"Authenticating {request.Email}");
 
-            var user = await dbUtility.GetUserByEmail(request.Email);
+            var user = await dbUtility.GetUserByEmail(request.Email!);
 
             if (user == null)
             {
@@ -59,7 +63,7 @@ namespace PawsitiveScheduling.API.Auth
                 return CreateResponse(HttpStatusCode.NotFound, "User not found");
             }
 
-            if (!hashingUtility.Verify(request.Password, user.Password))
+            if (!hashingUtility.Verify(request.Password!, user.Password))
             {
                 log.Info("Invalid password");
 

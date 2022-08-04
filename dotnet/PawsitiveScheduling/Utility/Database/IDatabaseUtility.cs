@@ -17,12 +17,12 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Get an entity by ID
         /// </summary>
-        Task<T> GetEntity<T>(string id) where T : Entity;
+        Task<T?> GetEntity<T>(string? id) where T : Entity;
 
         /// <summary>
         /// Get entities, optionally filtering and sorting them
         /// </summary>
-        Task<List<T>> GetEntities<T>(Expression<Func<T, bool>> filter = null, Expression<Func<T, object>> sortBy = null) where T : Entity;
+        Task<List<T>> GetEntities<T>(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null) where T : Entity;
 
         /// <summary>
         /// Add an entity
@@ -42,7 +42,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Delete an entity, returning it
         /// </summary>
-        Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity;
+        Task<T?> DeleteAndReturnEntity<T>(string id) where T : Entity;
 
         /// <summary>
         /// Gets the tracker
@@ -52,7 +52,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Create an index
         /// </summary>
-        Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity;
+        Task<string> CreateIndex<T>(Expression<Func<T, object?>> definition, string name) where T : Entity;
 
         /// <summary>
         /// Get all appointments that intersect the given start and end dates
@@ -62,11 +62,11 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Get a user by email
         /// </summary>
-        Task<User> GetUserByEmail(string email);
+        Task<User?> GetUserByEmail(string? email);
 
         /// <summary>
         /// Get a breed by name
         /// </summary>
-        Task<Breed> GetBreedByName(BreedName name);
+        Task<Breed?> GetBreedByName(BreedName name);
     }
 }

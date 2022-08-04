@@ -13,7 +13,7 @@ namespace PawsitiveScheduling.Utility.Auth
         /// <summary>
         /// Create JWT tokens for the given user
         /// </summary>
-        Task<TokenResponse> CreateTokens(User user, string ipAddress);
+        Task<TokenResponse> CreateTokens(User user, string? ipAddress);
 
         /// <summary>
         /// Get a user ID from a ClaimsPrincipal

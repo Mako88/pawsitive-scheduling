@@ -60,7 +60,7 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Log a warning with an exception
         /// </summary>
-        public void Warn(string message, Exception ex)
+        public void Warn(string message, Exception? ex)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Log an error with an exception
         /// </summary>
-        public void Error(string message, Exception ex)
+        public void Error(string message, Exception? ex)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace PawsitiveScheduling.Utility
         {
             var day = DateTime.Now.ToString(DayFormat);
 
-            if (loggers.TryGetValue(key, out var logger) && logger.Day == day)
+            if (loggers.TryGetValue(key, out var logger) && logger.Day == day && logger.Logger != null)
             {
                 return logger.Logger;
             }
@@ -158,9 +158,9 @@ namespace PawsitiveScheduling.Utility
         /// </summary>
         private class DateLogger
         {
-            public ILogger Logger { get; set; }
+            public ILogger? Logger { get; set; }
 
-            public string Day { get; set; }
+            public string? Day { get; set; }
         }
     }
 }

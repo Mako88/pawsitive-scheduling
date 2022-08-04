@@ -8,6 +8,7 @@ using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
+using PawsitiveScheduling.Utility.Extensions;
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -67,7 +68,14 @@ namespace PawsitiveScheduling.API.Auth
                 return CreateResponse(HttpStatusCode.Forbidden, "Invalid user in token");
             }
 
-            var hashedIp = Deterministic.Create(Constants.IpAddressDeterministicNamespace, context.Connection.RemoteIpAddress?.ToString());
+            var ipAddress = context.Connection.RemoteIpAddress?.ToString();
+
+            if (!ipAddress.HasValue())
+            {
+                throw new AuthenticationException("Cannot create token ");
+            }
+
+            var hashedIp = Deterministic.Create(Constants.IpAddressDeterministicNamespace, ipAddress!);
 
             var refreshToken = request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 

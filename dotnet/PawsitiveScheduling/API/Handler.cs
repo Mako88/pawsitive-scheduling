@@ -79,7 +79,7 @@ namespace PawsitiveScheduling.API
         /// <summary>
         /// Validate a request
         /// </summary>
-        protected bool ValidateRequest(object request, out IResult response)
+        protected bool ValidateRequest(object request, out IResult? response)
         {
             var errors = new List<string>();
 
@@ -89,23 +89,25 @@ namespace PawsitiveScheduling.API
                 {
                     var propertyValue = property.CanRead ? property.GetValue(request) : null;
 
-                    var validationAttribute = attribute as ValidationAttribute;
+                    var validationAttribute = (ValidationAttribute) attribute;
 
                     if (!validationAttribute.IsValid(propertyValue))
                     {
                         errors.Add(validationAttribute.FormatErrorMessage(property.Name));
                     }
 
+                    /*
                     var requiredAttribute = attribute as RequiredAttribute;
 
                     // Add an error for value types that are their default value but are required
                     if (requiredAttribute != null && property.PropertyType.IsValueType && propertyValue != null)
                     {
-                        if (Activator.CreateInstance(propertyValue.GetType()).Equals(propertyValue))
+                        var instance = Activator.CreateInstance(propertyValue.GetType());
+                        if (instance == null && instance.Equals(propertyValue))
                         {
                             errors.Add(validationAttribute.FormatErrorMessage(property.Name));
                         }
-                    }
+                    } */
                 }
             }
 

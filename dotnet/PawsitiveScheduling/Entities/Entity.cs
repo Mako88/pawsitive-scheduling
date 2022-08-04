@@ -10,6 +10,6 @@ namespace PawsitiveScheduling.Entities
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public virtual string Id { get; set; }
+        public virtual string Id { get; set; } = ObjectId.GenerateNewId().ToString();
     }
 }

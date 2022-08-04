@@ -7,19 +7,19 @@ namespace PawsitiveScheduling
     /// </summary>
     public static class EnvironmentVariables
     {
-        public static bool IsLocal = GetEnvironmentVariable("IS_LOCAL", false);
+        public static readonly bool IsLocal = GetEnvironmentVariable("IS_LOCAL", false);
 
-        public static int Argon2DegreeOfParallelism = GetEnvironmentVariable("ARGON2_DEGREE_OF_PARALLELISM", 8);
+        public static readonly int Argon2DegreeOfParallelism = GetEnvironmentVariable("ARGON2_DEGREE_OF_PARALLELISM", 8);
 
-        public static int Argon2Iterations = GetEnvironmentVariable("ARGON2_ITERATIONS", 4);
+        public static readonly int Argon2Iterations = GetEnvironmentVariable("ARGON2_ITERATIONS", 4);
 
-        public static int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024 * 1024);
+        public static readonly int Argon2MemorySize = GetEnvironmentVariable("ARGON2_MEMORY_SIZE", 1024 * 1024);
 
-        public static string JwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+        public static readonly string JwtKey = GetEnvironmentVariable("JWT_KEY", null) ?? throw new Exception("JWT_KEY environment variable not set");
 
-        public static string JwtIssuer = GetEnvironmentVariable("JWT_ISSUER", "https://pawsitivitypetspa.com");
+        public static readonly string JwtIssuer = GetEnvironmentVariable("JWT_ISSUER", "https://pawsitivitypetspa.com");
 
-        public static string JwtAudience = GetEnvironmentVariable("JWT_AUDIENCE", "pawsitivity");
+        public static readonly string JwtAudience = GetEnvironmentVariable("JWT_AUDIENCE", "pawsitivity");
 
         /// <summary>
         /// Get the connection string for the database
@@ -55,7 +55,7 @@ namespace PawsitiveScheduling
         /// <summary>
         /// Get an environment variable with a default value
         /// </summary>
-        public static string GetEnvironmentVariable(string variableName, string defaultValue) =>
+        public static string GetEnvironmentVariable(string variableName, string? defaultValue) =>
             DotNetEnv.Env.GetString(variableName, defaultValue);
     }
 }

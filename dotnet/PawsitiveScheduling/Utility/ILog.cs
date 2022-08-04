@@ -21,11 +21,11 @@ namespace PawsitiveScheduling.Utility
         /// <summary>
         /// Log a warning with an exception
         /// </summary>
-        void Warn(string message, Exception ex);
+        void Warn(string message, Exception? ex);
 
         /// <summary>
         /// Log an error with an exception
         /// </summary>
-        void Error(string message, Exception ex);
+        void Error(string message, Exception? ex);
     }
 }

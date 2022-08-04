@@ -175,17 +175,19 @@ namespace PawsitiveScheduling
 
                     var exceptionInfo = context.Features.Get<IExceptionHandlerPathFeature>();
 
+                    var exception = exceptionInfo?.Error ?? new Exception("An unknown error occurred");
+
                     using (var scope = IoC.BeginLifetimeScope())
                     {
                         var log = scope.Resolve<ILog>();
 
-                        log.Error($"Caught unhandled exception: {exceptionInfo.Error.Message}", exceptionInfo.Error);
+                        log.Error($"Caught unhandled exception: {exception.Message}", exception);
                     }
 
                     var body = new ErrorResponse
                     {
-                        Error = exceptionInfo.Error.Message,
-                        Stack = exceptionInfo.Error.StackTrace,
+                        Error = exception.Message,
+                        Stack = exception.StackTrace,
                     };
 
                     var json = JsonConvert.SerializeObject(body);

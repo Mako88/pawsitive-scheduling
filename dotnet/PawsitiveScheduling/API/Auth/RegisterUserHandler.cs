@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
-using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
+using PawsitiveScheduling.Utility.Entities;
 using System;
 using System.Data;
 using System.Net;
@@ -42,7 +42,7 @@ namespace PawsitiveScheduling.API.Auth
         {
             if (!ValidateRequest(request, out var response))
             {
-                return response;
+                return response!;
             }
 
             try

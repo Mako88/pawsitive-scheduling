@@ -46,10 +46,10 @@ namespace PawsitiveScheduling.API.Appointments
         {
             if (!ValidateRequest(request, out var response))
             {
-                return response;
+                return response!;
             }
 
-            var groomerId = request.GroomerId;
+            var groomerId = request.GroomerId!;
 
             if (groomerId.Equals("any", StringComparison.OrdinalIgnoreCase))
             {

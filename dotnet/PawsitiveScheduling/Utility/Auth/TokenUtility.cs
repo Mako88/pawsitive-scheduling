@@ -37,8 +37,13 @@ namespace PawsitiveScheduling.Utility.Auth
         /// <summary>
         /// Create JWT tokens for the given user
         /// </summary>
-        public async Task<TokenResponse> CreateTokens(User user, string ipAddress)
+        public async Task<TokenResponse> CreateTokens(User user, string? ipAddress)
         {
+            if (!ipAddress.HasValue())
+            {
+                throw new Exception("Cannot create token without IP address");
+            }
+
             var key = Encoding.UTF8.GetBytes(EnvironmentVariables.JwtKey);
 
             var signingCreds = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
@@ -73,7 +78,7 @@ namespace PawsitiveScheduling.Utility.Auth
 
             var refreshTokenString = tokenHandler.WriteToken(refreshToken);
 
-            var ipHash = Deterministic.Create(Constants.IpAddressDeterministicNamespace, ipAddress);
+            var ipHash = Deterministic.Create(Constants.IpAddressDeterministicNamespace, ipAddress!);
 
             user.RefreshTokens[ipHash.ToString()] = refreshTokenString;
 
@@ -98,7 +103,7 @@ namespace PawsitiveScheduling.Utility.Auth
                 throw new AuthenticationException("Sid claim missing from token");
             }
 
-            return userId;
+            return userId!;
         }
     }
 }

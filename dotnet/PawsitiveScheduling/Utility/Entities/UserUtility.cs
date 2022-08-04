@@ -1,12 +1,12 @@
 ﻿using PawsitiveScheduling.API.Auth.DTO;
-using PawsitiveScheduling.Utility;
+using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace PawsitiveScheduling.Entities.Users
+namespace PawsitiveScheduling.Utility.Entities
 {
     /// <summary>
     /// Utililty for managing users
@@ -47,10 +47,10 @@ namespace PawsitiveScheduling.Entities.Users
                 _ => new User(),
             };
 
-            user.Email = request.Email;
-            user.Role = request.Role;
+            user.Email = request.Email!;
+            user.Role = request.Role!;
 
-            user.Password = hashingUtility.CreateHash(request.Password);
+            user.Password = hashingUtility.CreateHash(request.Password!);
 
             user = await SaveUser(user);
 

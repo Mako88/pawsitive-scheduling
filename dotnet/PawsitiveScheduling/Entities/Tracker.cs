@@ -10,6 +10,6 @@ namespace PawsitiveScheduling.Entities
     {
         public override string Id => "tracker";
 
-        public string LastAutoAssignedGroomerId { get; set; }
+        public string? LastAutoAssignedGroomerId { get; set; }
     }
 }

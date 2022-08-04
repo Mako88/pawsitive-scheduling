@@ -1,9 +1,19 @@
-﻿namespace PawsitiveScheduling.API.Auth.DTO
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+namespace PawsitiveScheduling.API.Auth.DTO
 {
+    /// <summary>
+    /// A login request
+    /// </summary>
     public class LoginRequest
     {
-        public string Email { get; set; }
+        [Required]
+        [FromBody]
+        public string? Email { get; set; }
 
-        public string Password { get; set; }
+        [Required]
+        [FromBody]
+        public string? Password { get; set; }
     }
 }

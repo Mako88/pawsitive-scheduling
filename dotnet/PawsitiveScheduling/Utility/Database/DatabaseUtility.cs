@@ -33,13 +33,13 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Get an entity by ID
         /// </summary>
-        public async Task<T> GetEntity<T>(string id) where T : Entity =>
+        public async Task<T?> GetEntity<T>(string? id) where T : Entity =>
             await GetCollection<T>().Find(x => x.Id == id).SingleOrDefaultAsync();
 
         /// <summary>
         /// Get entities, optionally filtering and sorting them
         /// </summary>
-        public async Task<List<T>> GetEntities<T>(Expression<Func<T, bool>> filter = null, Expression<Func<T, object>> sortBy = null) where T : Entity
+        public async Task<List<T>> GetEntities<T>(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null) where T : Entity
         {
             if (filter == null)
             {
@@ -89,7 +89,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Delete an entity, returning it
         /// </summary>
-        public async Task<T> DeleteAndReturnEntity<T>(string id) where T : Entity
+        public async Task<T?> DeleteAndReturnEntity<T>(string id) where T : Entity
         {
             var entity = await GetEntity<T>(id);
 
@@ -101,18 +101,18 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Gets the tracker
         /// </summary>
-        public async Task<Tracker> GetTracker() => (await GetEntities<Tracker>()).SingleOrDefault();
+        public async Task<Tracker> GetTracker() => (await GetEntities<Tracker>()).SingleOrDefault() ?? new Tracker();
 
         /// <summary>
         /// Perform initialization
         /// </summary>
         public static void Initialize()
         {
-            var entityTypes = Assembly.GetAssembly(typeof(Entity)).GetTypes().Where(x => x.IsSubclassOf(typeof(Entity)));
+            var entityTypes = Assembly.GetAssembly(typeof(Entity))?.GetTypes()?.Where(x => x.IsSubclassOf(typeof(Entity))) ?? new List<Type>();
 
             foreach (var entityType in entityTypes)
             {
-                var attribute = (BsonCollectionNameAttribute) Attribute.GetCustomAttribute(entityType, typeof(BsonCollectionNameAttribute));
+                var attribute = (BsonCollectionNameAttribute?) Attribute.GetCustomAttribute(entityType, typeof(BsonCollectionNameAttribute));
 
                 if (attribute == null)
                 {
@@ -126,7 +126,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Create an index
         /// </summary>
-        public async Task<string> CreateIndex<T>(Expression<Func<T, object>> definition, string name) where T : Entity
+        public async Task<string> CreateIndex<T>(Expression<Func<T, object?>> definition, string name) where T : Entity
         {
             var collection = GetCollection<T>();
             var index = Builders<T>.IndexKeys.Ascending(definition);

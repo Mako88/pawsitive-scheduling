@@ -17,17 +17,17 @@ namespace PawsitiveScheduling.Utility.DI
 
         public bool Singleton { get; set; }
 
-        public Type Interface { get; set; }
+        public Type? Interface { get; set; }
 
-        public object Key { get; set; }
+        public object? Key { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public ComponentAttribute(RegistrationType RegistrationType = RegistrationType.AllInterfaces,
             bool Singleton = false,
-            Type Interface = null,
-            object Key = null
+            Type? Interface = null,
+            object? Key = null
             )
         {
             this.RegistrationType = RegistrationType;
@@ -46,7 +46,7 @@ namespace PawsitiveScheduling.Utility.DI
             {
                 var componentAttribute = type.GetCustomAttribute<ComponentAttribute>();
 
-                return new KeyValuePair<Type, ComponentAttribute>(type, componentAttribute);
+                return new KeyValuePair<Type, ComponentAttribute>(type, componentAttribute!);
             }));
 
             foreach (var typeAttribute in typesToRegister)

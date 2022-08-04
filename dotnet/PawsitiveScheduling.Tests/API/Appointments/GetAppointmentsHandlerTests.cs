@@ -183,14 +183,5 @@ namespace PawsitiveScheduling.Tests.API.Appointments
                 "3",
             };
         }
-
-        private bool ValidateAppointment(AddAppointmentRequest request, Appointment savedAppointment)
-        {
-            Assert.Equal(request.StartDate, savedAppointment.ScheduledTime.Start);
-            Assert.Equal(TimeSpan.FromMinutes(request.Duration), savedAppointment.ScheduledTime.Duration);
-            Assert.Equal(request.GroomerId, savedAppointment.GroomerId);
-
-            return true;
-        }
     }
 }

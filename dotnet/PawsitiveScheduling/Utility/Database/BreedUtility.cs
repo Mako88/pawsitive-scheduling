@@ -12,7 +12,7 @@ namespace PawsitiveScheduling.Utility.Database
         /// <summary>
         /// Get a breed by name
         /// </summary>
-        public async Task<Breed> GetBreedByName(BreedName name) =>
+        public async Task<Breed?> GetBreedByName(BreedName name) =>
             await GetCollection<Breed>().Find(x => x.Name == name).SingleOrDefaultAsync();
     }
 }

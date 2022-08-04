@@ -12,7 +12,7 @@ namespace PawsitiveScheduling.API.DTO
     /// </summary>
     public class Response : IResult
     {
-        public object Body { get; set; }
+        public object? Body { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
 
@@ -62,7 +62,7 @@ namespace PawsitiveScheduling.API.DTO
         /// <summary>
         /// For tests to get a property from the body of a response
         /// </summary>
-        internal T GetProperty<T>(string propertyName) where T : class =>
+        internal T? GetProperty<T>(string propertyName) where T : class =>
             JToken.Parse(GetJson())?[propertyName]?.ToObject<T>();
     }
 }

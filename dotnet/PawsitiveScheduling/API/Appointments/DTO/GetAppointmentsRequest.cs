@@ -10,6 +10,6 @@ namespace PawsitiveScheduling.API.Appointments.DTO
     {
         [Required]
         [FromQuery]
-        public string GroomerId { get; set; }
+        public string? GroomerId { get; set; }
     }
 }

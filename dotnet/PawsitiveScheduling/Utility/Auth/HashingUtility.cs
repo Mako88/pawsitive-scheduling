@@ -19,12 +19,13 @@ namespace PawsitiveScheduling.Utility.Auth
         /// </summary>
         public HashInfo CreateHash(string plaintext)
         {
-            var hashInfo = new HashInfo();
-
-            hashInfo.Salt = CreateSalt();
-            hashInfo.DegreeOfParallelism = EnvironmentVariables.Argon2DegreeOfParallelism;
-            hashInfo.Iterations = EnvironmentVariables.Argon2Iterations;
-            hashInfo.MemorySize = EnvironmentVariables.Argon2MemorySize;
+            var hashInfo = new HashInfo
+            {
+                Salt = CreateSalt(),
+                DegreeOfParallelism = EnvironmentVariables.Argon2DegreeOfParallelism,
+                Iterations = EnvironmentVariables.Argon2Iterations,
+                MemorySize = EnvironmentVariables.Argon2MemorySize
+            };
 
             hashInfo.HashedText = PerformHash(plaintext, hashInfo);
 
@@ -34,8 +35,13 @@ namespace PawsitiveScheduling.Utility.Auth
         /// <summary>
         /// Verify the given text matches the given hash
         /// </summary>
-        public bool Verify(string plaintext, HashInfo hashInfo)
+        public bool Verify(string? plaintext, HashInfo hashInfo)
         {
+            if (plaintext == null)
+            {
+                return false;
+            }
+
             var newHash = PerformHash(plaintext, hashInfo);
             return hashInfo.HashedText.SequenceEqual(newHash);
         }
