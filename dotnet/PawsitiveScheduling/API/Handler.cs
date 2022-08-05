@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace PawsitiveScheduling.API
 {
@@ -96,18 +97,17 @@ namespace PawsitiveScheduling.API
                         errors.Add(validationAttribute.FormatErrorMessage(property.Name));
                     }
 
-                    /*
                     var requiredAttribute = attribute as RequiredAttribute;
 
                     // Add an error for value types that are their default value but are required
                     if (requiredAttribute != null && property.PropertyType.IsValueType && propertyValue != null)
                     {
                         var instance = Activator.CreateInstance(propertyValue.GetType());
-                        if (instance == null && instance.Equals(propertyValue))
+                        if (instance == null || instance.Equals(propertyValue))
                         {
                             errors.Add(validationAttribute.FormatErrorMessage(property.Name));
                         }
-                    } */
+                    }
                 }
             }
 
@@ -125,5 +125,32 @@ namespace PawsitiveScheduling.API
         /// Map this handler to an endpoint
         /// </summary>
         public abstract void MapEndpoint(WebApplication app);
+
+        /// <summary>
+        /// Perform common handler logic
+        /// </summary>
+        protected async Task<IResult> HandleCommon(object request, HttpContext? context = null)
+        {
+            if (!ValidateRequest(request, out var errorResponse))
+            {
+                return errorResponse!;
+            }
+
+            return context == null ?
+                await HandleInternal(request) :
+                await HandleInternal(request, context);
+        }
+
+        /// <summary>
+        /// Perform handler-specific logic
+        /// </summary>
+        protected virtual Task<IResult> HandleInternal(object requestObject) =>
+            throw new Exception("HandleInternal called on the base handler");
+
+        /// <summary>
+        /// Perform handler-specific logic that requires an HttpContext
+        /// </summary>
+        protected virtual Task<IResult> HandleInternal(object requestObject, HttpContext context) =>
+            throw new Exception("HandleInternal called on the base handler");
     }
 }

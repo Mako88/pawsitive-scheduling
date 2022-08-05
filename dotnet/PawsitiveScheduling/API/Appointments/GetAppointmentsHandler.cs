@@ -42,12 +42,15 @@ namespace PawsitiveScheduling.API.Appointments
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer},{UserRoles.Customer}")]
-        public async Task<IResult> Handle(GetAppointmentsRequest request)
+        public async Task<IResult> Handle(GetAppointmentsRequest request) =>
+            await HandleCommon(request);
+
+        /// <summary>
+        /// Get appointments
+        /// </summary>
+        protected override async Task<IResult> HandleInternal(object requestObject)
         {
-            if (!ValidateRequest(request, out var response))
-            {
-                return response!;
-            }
+            var request = (GetAppointmentsRequest) requestObject;
 
             var groomerId = request.GroomerId!;
 

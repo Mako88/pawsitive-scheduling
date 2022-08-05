@@ -41,12 +41,15 @@ namespace PawsitiveScheduling.API.Appointments
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer},{UserRoles.Customer}")]
-        public async Task<IResult> Handle([FromBody] AddAppointmentRequest request)
+        public async Task<IResult> Handle([FromBody] AddAppointmentRequest request) =>
+            await HandleCommon(request);
+
+        /// <summary>
+        /// Add an appointment
+        /// </summary>
+        protected override async Task<IResult> HandleInternal(object requestObject)
         {
-            if (!ValidateRequest(request, out var response))
-            {
-                return response!;
-            }
+            var request = (AddAppointmentRequest) requestObject;
 
             log.Info($"Creating new appointment for GroomerId '{request.GroomerId}' starting on '{request.StartDate}' and lasting '{request.Duration}' minutes");
 

@@ -40,6 +40,9 @@ namespace PawsitiveScheduling.API.Dogs
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist}")]
         public async Task<IResult> Handle(string id)
         {
+            // TODO: Receive a request object instead of just an ID string
+            // and implement the template method pattern
+
             log.Info($"Getting dog with ID {id}");
 
             var dog = await dbUtility.GetEntity<Dog>(id);

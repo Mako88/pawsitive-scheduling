@@ -45,12 +45,15 @@ namespace PawsitiveScheduling.API.Auth
         /// Login
         /// </summary>
         [AllowAnonymous]
-        public async Task<IResult> Handle(LoginRequest request, HttpContext context)
+        public async Task<IResult> Handle(LoginRequest request, HttpContext context) =>
+            await HandleCommon(request, context);
+
+        /// <summary>
+        /// Perform login
+        /// </summary>
+        protected override async Task<IResult> HandleInternal(object requestObject, HttpContext context)
         {
-            if (!ValidateRequest(request, out var response))
-            {
-                return response!;
-            }
+            var request = (LoginRequest) requestObject;
 
             log.Info($"Authenticating {request.Email}");
 

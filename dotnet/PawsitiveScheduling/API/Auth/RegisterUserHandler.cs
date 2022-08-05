@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.DI;
@@ -38,12 +37,15 @@ namespace PawsitiveScheduling.API.Auth
         /// <summary>
         /// Handle the request
         /// </summary>
-        public async Task<IResult> Handle([FromBody] RegisterUserRequest request)
+        public async Task<IResult> Handle(RegisterUserRequest request) =>
+            await HandleCommon(request);
+
+        /// <summary>
+        /// Register a user
+        /// </summary>
+        protected override async Task<IResult> HandleInternal(object requestObject)
         {
-            if (!ValidateRequest(request, out var response))
-            {
-                return response!;
-            }
+            var request = (RegisterUserRequest) requestObject;
 
             try
             {
