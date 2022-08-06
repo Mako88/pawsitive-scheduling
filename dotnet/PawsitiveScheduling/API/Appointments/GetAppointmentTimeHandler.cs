@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Appointments.DTO;
 using PawsitiveScheduling.Entities;
 using PawsitiveScheduling.Entities.Users;
@@ -39,7 +40,7 @@ namespace PawsitiveScheduling.API.Appointments
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist},{UserRoles.Groomer},{UserRoles.Customer}")]
-        public async Task<IResult> Handle(GetAppointmentTimeRequest request) =>
+        public async Task<IResult> Handle([FromBody] GetAppointmentTimeRequest request) =>
             await HandleCommon(request);
 
         /// <summary>

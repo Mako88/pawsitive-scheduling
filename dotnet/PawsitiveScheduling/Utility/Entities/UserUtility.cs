@@ -3,6 +3,7 @@ using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility.Auth;
 using PawsitiveScheduling.Utility.Database;
 using PawsitiveScheduling.Utility.DI;
+using PawsitiveScheduling.Utility.Extensions;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace PawsitiveScheduling.Utility.Entities
             };
 
             user.Email = request.Email!;
-            user.Role = request.Role!;
+            user.Role = request.Role.HasValue() ? request.Role! : UserRoles.Customer;
 
             user.Password = hashingUtility.CreateHash(request.Password!);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.Entities.Users;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Database;
@@ -37,7 +38,7 @@ namespace PawsitiveScheduling.API.Dogs
         /// Handle the request
         /// </summary>
         [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Receptionist}")]
-        public async Task<IResult> Handle(Dog dog) =>
+        public async Task<IResult> Handle([FromBody] Dog dog) =>
             await HandleCommon(dog);
 
         /// <summary>

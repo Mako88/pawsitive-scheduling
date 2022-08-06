@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PawsitiveScheduling.API.Auth.DTO;
 using PawsitiveScheduling.Utility;
 using PawsitiveScheduling.Utility.Auth;
@@ -51,7 +52,7 @@ namespace PawsitiveScheduling.API.Auth
         /// <summary>
         /// Perform login
         /// </summary>
-        protected override async Task<IResult> HandleInternal(object requestObject, HttpContext context)
+        protected override async Task<IResult> HandleInternal([FromBody] object requestObject, HttpContext context)
         {
             var request = (LoginRequest) requestObject;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PawsitiveScheduling.API.Auth.DTO
 {
@@ -9,11 +8,9 @@ namespace PawsitiveScheduling.API.Auth.DTO
     public class LoginRequest
     {
         [Required]
-        [FromBody]
         public string? Email { get; set; }
 
         [Required]
-        [FromBody]
         public string? Password { get; set; }
     }
 }
